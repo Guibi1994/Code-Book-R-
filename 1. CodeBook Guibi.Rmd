@@ -1,0 +1,690 @@
+---
+title: "El Code-Book de Guibi"
+output:
+  github_document:
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+ditor_options: 
+  markdown: 
+    wrap: 72
+---
+
+Por: *Guibor Camargo*
+
+Contacto: guibor.camargo\@urosario.edu.co
+
+Este code-book contiene una guía práctica para la utilización de del programa **R**, y este diseñada para estudiantes de primer y segundo semestre de Ciencias Políticas, Relaciones Internacionales y Gestión y Desarrollo urbanos. Este libro trata 5 temas principales: El primero de ellos es una introducción a la estadística, en el cual se repasan conceptos muy básicos de estadística descriptiva y estadística inferencial, en donde se hace un repaso desde estadísticos básicos como le promedio y la desviación estándar, hasta algunas técnicas de agrupación de variables y métodos de regresión. 2) El segundo capítulo es un compendio de "tipos" de programación en **R**, nada complejo, pues la mayoría de los temas complejos ya se tratan en otros textos y se pueden consultar en foros como [Stack overflow](https://stackoverflow.com/).
+
+El tercer capítulo hace un repaso rápido de "ggplot2", en el cual se busca brindar de manera breve y concisa los fundamentos de la traficación en **R**, dirigido a que los estudiantes puedan fácilmente analizar sus datos y generar insumos científicos para sus trabajos. El cuarto capítulo aborda concejos prácticos para reportar modelos estadísticos como modelos de regresó y test de diferencia de medias. Finalmente el quinto capítulo, introduce algunas operaciones de análisis espacial básico que se pueden realizar desde **R** así como también un introducción rápida a la visualización de mapas interactivos usando la librería **leaflet**.
+
+Este texto busca más que ser una guía completa del uso de este programa, un atajo para que los estudiantes logren realizar sus análisis e investigaciones con facilidad, en búsqueda de resultados científicos de calidad.
+
+------------------------------------------------------------------------
+
+# II. Fundamentos de *R*
+
+## 4. Eficiencia en códigos
+
+Supongamos que quiero consultar de una base muy extensa de fechas
+
+```{r}
+pr <- as.character(sample(seq(as.Date('1999/01/01'), 
+                 as.Date('2020/01/01'), by="day"), 10^6, replace = T))
+```
+
+```{r}
+# Opción A:
+max(as.Date(pr))
+
+# Opción B:
+as.Date(max(pr))
+```
+
+```{r}
+
+# Opción A:
+Inicio_A <- Sys.time()
+max(as.Date(pr))
+Fin_A <- Sys.time()
+
+# Opción B:
+Inicio_B <- Sys.time()
+as.Date(max(pr))
+Fin_B <- Sys.time()
+
+
+data.frame("Tiempo A" = Fin_A - Inicio_A,
+           "Tiempo B" = Fin_B - Inicio_B)
+```
+
+```{r}
+
+
+
+```
+
+# II. Gráficas
+
+## 1. Librerias adicionales
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+library(dplyr)
+library(ggplot2)
+library(grid)
+library(egg)
+library(scales)
+
+# Data de prueba desde Google Sheets
+
+Base <- dplyr::sample_n(as.data.frame(
+  gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/12LY23ys_w3EUDX5FkT0l_0yiijioDpn2n-FmGzYMeD4/edit?usp=sharing")),15*10^3)
+```
+
+## 2. Tipos de gráficas
+
+### 2.1. Distribución acumulada
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=3,fig.width=4, warning=FALSE, message=FALSE}
+ggplot(Base, aes(R6_IPM_IDW)) +
+  stat_ecdf(geom = "step")
+```
+
+### 2.2. Boxplots
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=3,fig.width=4, warning=FALSE, message=FALSE}
+ggplot(Base, aes(x = Municipio, y = Base$R6_IPM_IDW))+
+  geom_boxplot(outlier.shape = NA)
+
+```
+
+### 2.3. Scatter plots (dispersión)
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=3,fig.width=4, warning=FALSE, message=FALSE}
+
+ggplot(Base, aes(x = log(R3_Casos_1hora),y = log(R4b_Luminosidad_2013))) +
+  
+  # 1. Agregamos los putnos
+  geom_point() +
+  
+  # 2. Podemos agregar una linea de regresion (lm, glm, gam, loess),
+  geom_smooth(method = loess, color = "red", fill = "blue")
+```
+
+### 2.4. Histogramas
+
+## 3. Mejoras a las gráficas
+
+#### 3.1. Titulos de gráficas y ejes
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=5, warning=FALSE, message=FALSE}
+# Boxplot del IPM por municipio
+p <- ggplot(Base, aes(x = Municipio, y = Base$R6_IPM_IDW))+
+  geom_boxplot(outlier.shape = NA)
+
+
+
+p <- p +
+  # 1. El comando "labs()" permite facilmente AGREGAR todos los titulos de la gráfica
+  labs(
+    title = "Índice de Pobreza Multidimensional (IPM)",
+    subtitle = "Información del censo DANE, 2018",
+    x = "Municipio",
+    y = "IPM 2018") +
+  
+  
+  # 2. 
+  # 3. El comando "theme()", tiene varias funciones,entre ellas EDITAR el formato
+      # de los textos de la gráfica
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+  
+
+  
+p
+```
+
+#### 3.2. Agregar cortes en los ejes
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=5, warning=FALSE, message=FALSE}
+#sad
+p + 
+  # A. Cortes en eje "Y"
+  geom_hline(
+  yintercept = c(30,60),
+  linetype = c("dashed", "twodash"),
+  color = c("red","purple")) +
+  
+  # B. Cortes en eje "X"
+  geom_vline(
+    xintercept = 5.5, color = "blue")
+
+```
+
+#### 3.3. Tipos de líneas
+
+Estos son los tipos de lineas seleccionables generalmente usados:
+
+![](http://www.sthda.com/sthda/RDoc/figure/ggplot2/ggplot2-line-type-line-type-1.png){width="499"}
+
+Imágen tomada de:
+
+<http://www.sthda.com/english/wiki/ggplot2-line-types-how-to-change-line-types-of-a-graph-in-r-software>
+
+#### 3.4. Colores base
+
+Los colores pueden contruirse por código html, pero en general es más facil escojer de la platea prederminada de **R**. Acá hay dos buenas pagians para consultar:
+
+-   <http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf?utm_source=twitterfeed&utm_medium=twitter>
+
+-   <https://www.nceas.ucsb.edu/sites/default/files/2020-04/colorPaletteCheatsheet.pdf>
+
+#### 3.5. Reorganizar por valores
+
+Para **regorganizar** (cuadno sea pertinente) la gráfica utilizamos el argumetno "reorder()", seguido de la variable que queremos agrupar, la variable que dará el orden, y la función a través de la cual se dará dicho orden.
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=5, warning=FALSE, message=FALSE}
+
+# FÍJESE en esta parte:
+p <- ggplot(Base, 
+       aes(x = reorder(Municipio, R6_IPM_IDW, median, na.rm = T),
+           y = R6_IPM_IDW)) +
+  
+  # Comentario: Aca "reoganizamos" los municipios, en función del "IPM", utlizando
+      # la "mediana" como referencia del orden, y excluyendo los "N.A."
+  
+  
+  # Esto ya lo vimos, no le pare bolas.
+  geom_boxplot(outlier.shape = NA) +
+  labs(
+    title = "Índice de Pobreza Multidimensional (IPM)",
+    subtitle = "Distribución de usuarios por municipio",
+    x = "Municipio",
+    y = "IPM 2018") +
+  geom_hline(yintercept = 30, color = "red", linetype = "dashed") +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1)) 
+  
+p
+  
+```
+
+#### 3.6. Agregar puntos medios
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+p <- p + stat_summary(fun.y = mean, geom = "point",
+               shape = 20, size = 4, color = "turquoise")
+
+p
+```
+
+#### 3.7. Agregar comenatrios
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+p <- p + labs(caption = "Fuente: Censo DANE, 2018")
+
+p
+```
+
+#### 3.8. Cambiar formato del texto
+
+El formato del texto, se cambia con el mismo comando "**theme()**". Hay varias fuentes (tipos de letra), que podemos escojer en **R** a través de instalar otras librerias. Sin embargo, predefinidas en la base tenemos **4**:
+
+1.  "sans" para **Arial**
+
+2.  "serif" para **Times New Roman**
+
+3.  "mono" para **Courier**
+
+4.  "symbol" para **Standard Symbols L**
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+
+p <- p + theme(text = element_text(family="serif", size = 9))
+
+p
+```
+
+Acá pueden consultar un poco mas sobre cambiar la fuente del texto en **R**:
+
+<https://cran.r-project.org/web/packages/svglite/vignettes/fonts.html>
+
+Incluso se pueden personalizar textos individuales de la gráfica:
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+
+p <- p + theme(
+  plot.title  = element_text(colour = "turquoise4", face = "bold"),
+  plot.subtitle = element_text(colour = "grey30", face = "italic"))
+
+p
+```
+
+#### 3.9. Superponer textos
+
+Para esto haremos uso de la libreria "**grid**".
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+
+library(grid)
+# 1. Alojamos nuestro comentario o comentarios en objetos individuales
+
+Comentario <- grobTree(
+  textGrob("Linea de pobreza", x=0.85,  y=0.26, hjust=0.5,rot = 0,
+           gp=gpar(col="red", fontsize=9, fontfamily = "serif")))  
+
+p <- p +  annotation_custom(Comentario)
+
+p
+```
+
+#### 3.10. Temas predeterminados
+
+Por lo general, la selección de un **formato predeterminado** se hace antes de cualquier modificación a los textos que use el argumetno "**theme()**". Pero como pedagógicamente vimos primero otras ediciones indiviudales antes que una edición general, agregaremos todas las ediciones previas en un objeto llamado "Arreglos_varios"
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+
+Arreglos_varios <-  theme(axis.text.x = element_text(angle = 40, hjust = 1)) +
+  theme(text = element_text(family="serif", size = 9)) + 
+  theme(
+  plot.title  = element_text(colour = "turquoise4", face = "bold"),
+  plot.subtitle = element_text(colour = "grey30", face = "italic"))
+  
+  
+```
+
+Habiendo realizado esto, ahora si revisemos los **temas predeterminados**. Har una una variedad extensa de temas prederminados, e incluso hay aun más si se instala la libreria "ggthemes". En general, estos temas prederminados lleban el nombre de "theme_nombre", donde "nombre" es (valga la redundancia) el nombre del tema predetermiando. Algunos de los temas prederminados preinstalados en **R** son:
+
+-   them_minimal()
+-   theme_dark()
+-   theme_classic()
+-   theme_linedraw()
+-   theme_presentation()
+
+Ddesde la libreria **ggthemes** tambien hay algunos interesantes:
+
+-   theme_stata()
+-   theme_economist()
+-   theme_pander()
+-   etc...
+
+Tomete el tiempo de jugar con estos temas, CON y SIN arreglos, para que puedas ver cuál es el que más te gusta y/o el que más se acomoda al formato de presentación que estas manejando.
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+library(ggthemes)
+p <- p + theme_minimal() + Arreglos_varios
+
+p
+```
+
+#### 3.11. Guardar gráficas
+
+Para guardar las gráficas, auqnue no es necesario, es combeniente crear una carpeta llamda "Gráficas", en donde dejaras alojadas todas la gráficas que vayas produciendo. Para exportar estas gráficas, puedes usar el comando "ggsave()" de la siguiente manera:
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=4,fig.width=6, warning=FALSE, message=FALSE}
+
+# Guardamos nuestra gráfica:
+ggsave("2. Imagenes/Prueba.jpg", p, width = 5, height = 4)
+```
+
+#### 3.12. Agregar gráficas independietnes
+
+```{r, results='asis', echo=TRUE,fig.align='center', fig.height=6,fig.width=7, warning=FALSE, message=FALSE}
+p_m <- ggplot(Base, aes(x = Municipio, y = Base$R6_IPM_IDW))+
+  geom_boxplot(outlier.shape = NA)
+
+
+library(egg)
+
+
+egg::ggarrange(p_m,p, nrow = 2)
+```
+
+------------------------------------------------------------------------
+
+# III. Análisis Econométrico
+
+## 1. Modelo de Mínimos Cuadrados Ordinarios
+
+### 1.1 Intución general
+
+Hay varias formas (o métodos) de estimar una regresión (alias: econtrar la relación marginal entre variables). Pero entre todos el más conocido y generalizado es el modelo de regresión por *Mínimos Cuadrados Ordinarios* (**MCO**). Sin emabrgo, antes de profundizar su definición matemática y como programa en **R**, es importante que sepamos para que sirven estos "*métodos de regresión*".
+
+Y, en términos generales, los métodos de regresion (entre ellos el *MCO*), nos sirven para encontrar la relación entre variables. Pero no cualquier relación: Nos sirven para econtrar la **relación marginal** entre variables. Sin embargo, para algunos esta noción de **relación marginal** puede ser nueva, así que pensemos en por qué puede ser importante determinar estadísticamente la relación entre variables.
+
+-   ¿Cuál es la relación entre el nivel de contaminación en la ciudad y la número de casos de cancer reportados anualmente?
+
+-   ¿Cuál es la realación entre entre el nivel de desiguldad económica
+
+$$ Y_i = \\alpha + \\beta_1 x_1i + \\epsilon_i $$
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='asis', fig.align='center', fig.height=6, fig.height=4}
+p1 <- ggplot(Base, aes(R4a_Luminosidad_1992, R4b_Luminosidad_2013)) +
+  geom_point(color = "grey40", alpha = 0.4) + 
+  labs(
+    x = "Luminosidad nocturna 1992",
+    y = "Luminosidad nocturna 2013") +
+  theme_minimal()
+
+p2 <- ggplot(Base, aes(R4a_Luminosidad_1992, R4b_Luminosidad_2013)) +
+  geom_point(color = "grey40", alpha = 0.4) +
+  geom_smooth(method = "lm", fill = NA, color = "red") + 
+  labs(
+    x = "Luminosidad nocturna 1992  ",
+    y = "Luminosidad nocturna 2013") +
+  theme_minimal()
+
+
+grid.arrange(p1,p2,nrow = 1)
+```
+
+### 1.2. Componentes del MCO
+
+#### 1.2.1. '$Y$' variable dependiente
+
+#### 1.2.2. '$x$' variable independiente
+
+#### 1.2.3. '$\\beta$' coeficiente (relación marginal)
+
+$$ \\hat{\\beta} = \\frac{Cov(X,Y)}{Var(X)} $$
+
+$$ \\hat{\\beta} = (X'X)^{-1} X'Y $$
+
+#### 1.2.4. '$\\alpha$' constante (tambien llamda '$\\beta 0$')
+
+#### 1.2.3.
+
+### 1.2. Supuestos del modelo
+
+Cualquier forma de estimación tiene consigo una serie de supuestos de los cuales deoende la validez de sus estimaciones.
+
+**1. Linealidad del modelo de regresión**:
+
+Vecotrialmente $$ y_i = \\beta_0 + x_1\\beta_1 + ... + x_n \\beta_n+ \\epsilon $$ Matricialmente $$ y = X'\\beta + \\epsilon $$
+
+**2. Rango completo**:
+
+**3. Exogeneidad de las variables regresoras**:
+
+**4. Homoscedasticidad y no autocorrelación**:
+
+**5. Proceso generador de datos para los regresores**:
+
+**6. Normalidad**:
+
+#### 1.2.1. Qué son los supuestos y por que son importantes.
+
+#### 1.2.1. Qué son los supuestos y por que son importantes.
+
+## 2. ¿Qué pasas cuando los supuestos no se cumplen
+
+## 2.1. Homecedasticidad y heterocedasticidad
+
+#### 2.1.1. ¿Qué es la *heterocedasticidad*?
+
+*Formalmente* la heterocedasticidad es en incumplimiento del supuesto
+
+*La intuión detras de*
+
+#### 2.1.2. ¿Qué problemas genera?
+
+#### 2.1.3. Vizualizar la hetericedasticidad gráficamente
+
+#### 2.1.4. Purbas estadísticas para detectar heterocedasticidad
+
+```{r, eval=FALSE}
+# 1. Determinar la tabla resultado
+stargazer::stargazer(
+(data.frame(
+# 2. Extraer el estadístico Chi de la prueba
+"Chi2" =as.numeric(olsrr::ols_test_breusch_pagan(m1)[1]),
+# 3. Extraer p-value estadística de la prueba
+"ProbChi2" = as.numeric(olsrr::ols_test_breusch_pagan(m1)[2])) %>%
+  rename(`Prob > Chi2` = ProbChi2)),
+# 4. Editar la tabla resultado
+title = "Resultados test de Breusch Pagan", header = F,
+notes = "Ho: Varianza constante", rownames = F, type = "latex", summary = F)
+```
+
+#### 2.1.5. Corregir la heterocidasticidad
+
+```{r, eval=FALSE}
+
+library(sandwich)
+R1 <- sqrt(diag(vcovHC(m1, type = "HC0")))
+
+```
+
+##### 2.1.5.1. MCO con erroes robustos EHW
+
+Un probelma común en el análisis econométrico, es que no conocemos la *función de distribución poblacional*, es decir, no sabemos si la el proceso generador de datos es lineal, cuadrático, polínómico, logarímico, o lo que sea.
+
+##### 2.1.5.2. Mínimos Cuadrados Generalizados
+
+### 2.2. Colinialidad y Multicolinialidad
+
+*Formalmente*
+
+*La intuión detras de*
+
+## 2.3. Endogeneidad y Exogeneidad
+
+### 2.3.1. ¿Qué es la *edogeneidad*?
+
+Fuentes de endogeneidad
+
+1.  **Causalidad inversa**
+2.  No aleariedad de la muestra (sesgo de selección)
+3.  Autoselección (sesgo de auoselección)
+4.  Error de medición de las variables regresoras
+5.  Sesgo de deserción
+
+*Formalmente*
+
+$$ Cov(x, \\epsilon) \\neq 0 $$
+
+Al no ser $0$ los coeficientes de la regresión estarán mal estimados. A este se le llama **problema de identificación**, en tanto los efectos marginales estrán mal estimados/identificados.
+
+*La intuión detras de*
+
+sad
+
+### 2.3.1. Técnicas de corrección más utilizadas
+
+#### 1.3.4.1. Variables Instrumentales: *Mínimos cuadrados a dos etapas*
+
+Mínimos cuadrados a dos etapas, consiste en eliminar el componente endógeno de la variable considerada como endógena, a través de proyectar esta variable a través de sus instrumentos. Formalmente: $$ y = X_1'\\beta + \\hat{x_2}\\theta + \\epsilon $$
+
+En donde es $X'\_1$ es la matriz de variables exógenas, y $x_2$ es la considerada endógena.  Las dos etapas se construyen de la siguiente forma:
+
+1.  Primero, se escogen las variables instrumentales (denotadas como "$Z'$" ) que explican la variable considerada exógena ($x_2$). Estas variables deben ser predictores de $x_2$ y solo tiene relación con la variable de interés ("$y$"), a través de $x_2$.   Esta *incorrelación* directa entre"'$Z'$" y "$y$" , **es argumentativa**; es decir, no se prueba estadísticamente que los instrumentos solo relacionados con "$y$" a través de $x_2$ sino que se debe argumentar que esta situación es plausible.
+
+    $$ Cor(Z' \\rightarrow x_2) \\neq 0 $$
+
+    $$ Cor(Z' \\rightarrow y) = 0 $$
+
+2.  Una vez seleccionadas las variables instrumentales $Z'$, se corre la regresión de primera etapa. La cual consiste en regresar la variable considerada endógena sobre los instrumentos y las demás variables exógenas del modelo inicial.
+
+    $$ x_2 = X'\_1 \\beta + Z' + u $$
+
+3.  Una vez realizada esta regresión, extraemos de ella el valor esperado de $x_2$, es decir extraemos $\\hat{x_2}$. Esto lo podemos hacer utilizando el comando '`fitted()`'. Finalmente tomamos este valor esperado, y lo integramos dentro de la regresión inicial. Esta es la regresión de la segunda etapa.
+
+    $$ y = X_1'\\beta + \\hat{x_2}\\delta+ \\epsilon $$
+
+4.  Así, el coefienciete de $\\hat{x_2}$ ($\\delta$), estaría capturando el **efecto causal** de $x_2$ sobre $y$.
+
+La intuición es que si $Z$ está incorrelacionada con $y$, la proyección de $x_2$ que se estima con $Z$ estará libre de endogeneidad, por el mismo hecho de que no se relaciona con $y$. Es decir, $\\hat{x_2}$ es la información de $x_2$ exógena, o independiente de $y$ y el término de error. Es importante tener en cuenta,que si hay más de una variable endógena, la primera etápa de la que se extrae el valor estimado de la variable endógena, debera repetirse para cada uno de las variables consideradas endógenas. Así, el modelo final contara con las varaibles exógenas, y la proyección instrumentada de cada una de las variables consideradas endógenas.
+
+Si se quiere realizar las dos etapas a mano y no con paquetes adicionales en **R**, es adicionar al final de la regresión de cada etapa el comando '`na.action = na.exclude`' de la siguiente forma: '`lm(..., na.action = na.exclude)`'. De este modo, todos los parámetros (estimados y residuales) de las regresiones, sin excluir aquellas observaciones no utilizadas en cualquiera de las etapas.
+
+#### 1.3.4.2. Modelos estructurales: *Control function approach*
+
+El método de "enfoque de función de control", busca solucionar los problemas de endogeneidad, en especial (pero **no exclusivamente**) para aquellos casos en donde la **forma funcional** del modelo planteado **no sea lineal**. Así, partimos del modelo teórico.
+
+$$ y = X'\_1\\beta + x_2 \\lambda + \\epsilon $$
+
+En donde $X'\_1$ es la matriz de variables exógenas, y $x_2$ es la variable (una sola) que se considera endógena. Lo que propone entonces *Controll Funciton Appoach* es:
+
+1.  Correr una regresión entre los instrumentos, y las variables exógenas sobre la variable endógena. Es decir, se corre la clásica primera etapa:
+
+    $$ x_2 = X' + Z + u $$
+
+2.  Posteriormente, se extraen los residuales de esta regresión, es decir se extrae $\\hat{u}$. Esto se puede realizar con el comando "`residual()` ".
+
+3.  Una vez extraídos los residuales de esta regresión de primera etapa, se la integra como una nueva variable dentro de la regresión inicial:
+
+    $$ y = X'\\beta + x\\lambda + \\hat{u}\\theta + v $$
+
+La intuición general de este procedimiento, es que $\\hat{u}$ está capturando toda la información de $x_2$ (variable endógena), que no es explicada por los instrumentos y las variables exógenas. Y, como la combinación de los instrumentos y demás variables exógenas predicen un vector exógeno $\\hat{x_2}$, entonces $\\hat{u}$ estaría capturando la parte exógena de $x_2$ .
+
+#### 1.3.4.5. Detectar Instrumentos débiles
+
+##### [**A. Correlaciones incondicionales**]{.ul}
+
+Es decir, analizar la relación entre la variable/s endógena y sus potenciales instrumentos. Se puede realizar a través de una simple correlación. Si no hay gran correlación entre un determinado instrumento y la variable endógena, es probable que entonces dicho instrumento no sea debil.
+
+##### [**B. Detección de instrumetnos débiles de *Angrist y Pischke***]{.ul}
+
+Partiendo del modelo:
+
+$$ y = x_1\\beta + x_2\\theta + x_3\\phi + \\epsilon $$
+
+En donde $\\hat{x_1}$, es endógena con la variable de interes ($y$) mientras que $\\hat{x_2}$ y $\\hat{x_3}$ son consideradas exógenas. De este modo es necesario intrumentar $x_1$ para poder capturar su efecto causal sobre $y$, es necesario buscar insturmentos, como vimos anteriormente. ¿Pero cómo saber si los instrumentos son **fuertes** o **débiles**? es decir ¿cómo determinar si un instrumento es mejor que otro para saber cuál usar?. Para esto podemos calcular la "*F de Angrist y Pischke*"*.*
+
+1.  Para hacerlo corremos la regresión clásica de primera etápa, utilizada tanto en MCO a dos etapas como en le método de función de control. Es decir, regresar $x_1$ (que es en este caso la variable endógena), sobre las demas variables exógenas del modelo inicial, y sobre los instrumentos seleccionados:
+
+    $$ x_1 = x'\_{\\neq1} + Z' + e $$
+
+2.  Una vez se realice estea regresión, capturamos el valor esperado de $x_1$: extremos el vector $\\hat{x_1}$. En **R** esto se puede relizar con la función '`fitted()`'. Como puede verse, hasta este punto es el mismo procedimiento realizado en la primera etapa de MCO a dos etapas. Ahora, tomamos este valor esperado $\\hat{x_1}$ y lo regresamos pero solo sobre las demas variables exógenas. Recuerde que **no estamos regresando** $x_1$ sino que estamos utilizando **su valor estimado** $\\hat{x_1}$ y a la vez estamos excluyendo los instrumentos $Z$.
+
+$$ \\hat{x_1} = x\_{\\ne 1} + u $$
+
+1.  Posteriormente, de esta segunda regresión extremos los residuales: es decir extraemos $\\hat{u}$. Tomamos estos residuales y los regresamos sobre el/los instrumentos $Z$. La intuición acá, es que $\\hat{u}$ corresponde a la información de $\\hat{x_1}$ que no es explicada por las demas variables exógenas: Es decir, la parte de la variable instrumentada, que no es explicada por las demás variables exógenas.
+
+$$ \\hat{u} = Z + v $$
+
+1.  De este modo, la ultima regresión planteada, responde a la pregunta ¿qué parte de la versión insrumentada de $x_1$ (es decir $\\hat{x_1}$ , que es una proyección exógena de $x_1$) es explicada por los instrumentos seleccionados $Z$? Por esto de esta regresión final, nos interesan dos estadísticos: la F, (que derivada de este proceso es la llamada "*F de Angrist y Pischke*"), el $R^2$ *ajustado*. En el caso de la $F$ del modelo, porlo general se busca que sea mayor a 10, aunque entre más grande sea, se evidencia que los intrumentos son buenos para predecir a $x_1$. Lo mismo sucede con el $R^2$ *ajustado*, de esta etapa: entre más grande sea, mejor el instrumento.
+
+## Método generlizado de los momentos
+
+# IV. de
+
+### 1.2. Estadarización de variables
+
+Una estandarización es combertir a todas las variables en desviaciones de su media. Esto no tiene efectos algebraicos en la estimación de una regresión, pero facilita la interpretación de los resultados. Esto permite que todas las variables esten expresadas en términos de desviaciones con respecto a las medias. En el contexto de un análisis estadístico, puede ser útil si uno quiere llegar a diferenciar el nivel de sensibilidad que tiene una variable $Y$ ante diferentes facores explicativo .
+
+$$ Xi\_{estadarizada} = \\frac{x_i - \\bar{x}}{std(x)} $$
+
+```{r}
+# Creamos una base copiada, pero con los valroes estadrizados
+
+Base_std <- cbind(
+  
+  # 1. Selecionamos las variables no numericas que deseamos conservar, así
+      # como tambien aquellas variables que no estarizaremos (ejm: dummies)
+  (Base %>% select(Municipio, hostuser, ageC)),
+  
+  # 2. Seleccionamos las variables que SÍ estarizaremos, agregando el argumento
+    # "scale()". Recuerde que solo se pueden estadarizar variables numéricas.
+  
+  scale(Base %>% select(R3_Casos_1hora, R4b_Luminosidad_2013, R7a_Den_Ur_DANE,
+                   R7b_Den_Fam_Ranch, R6a_Dis_Pavimentada)))
+```
+
+## 1. Modelos lineles básicos
+
+Sean definidos los isguientes modelos:
+
+Modelo **1**:
+
+$$User.Desity_i = \\beta0 + \\beta_1Night.Light_i + \\beta_2Den.Urb.Pob_i + \\beta_3Dis.PRoads_i + \\theta Municipio'\_i+ \\epsilon_i$$
+
+Modelo **2** :
+
+$$Rancherias'.Families_i = \\beta0 + \\beta_1Night.Light_i + \\beta_2Den.Urb.Pob_i + \\beta_3Dis.PRoads_i + \\epsilon_i$$
+
+```{r, echo=TRUE, results='hide'}
+M1 <- lm(R3_Casos_1hora ~ R4b_Luminosidad_2013 + R7a_Den_Ur_DANE +
+           R6a_Dis_Pavimentada + Municipio,
+         Base_std)
+
+M2 <- lm(R7b_Den_Fam_Ranch~R4b_Luminosidad_2013 + R7a_Den_Ur_DANE +
+           R6a_Dis_Pavimentada,
+         Base_std)
+```
+
+## 2. Vizualizar modelos con Stargazer
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(stargazer)
+
+
+stargazer(
+  
+  # 1. Seleccionamos los modelos a vizualizar
+  M1, M2,
+  
+  # 2. Seleccioanr el formato de la tabla resultante ("text", "latex" o "html")
+  type = "text",
+  
+  # 3. Cambiar el nómbre de los regresores(las "X's")
+  covariate.labels =
+    c("Intensidad lumínica nocturna",
+      "Densidad de población urbana",
+      "Distancia a vías pavimentadas"), 
+  
+  # 4. Cambiar el nombre de las varibles regresadas (las "Y's")
+  dep.var.labels = 
+    c("Densidad de Usuarios", "Densidad de Rancherias"),
+  
+  # 5. Cambiar la etiqueta superior de los modelos
+  dep.var.caption = "Vairables dependientes",
+  
+  # 6. CON o SIN números de columnas
+  model.numbers = F,
+  
+  # 7. Omitir alguna variable de la tabla
+  omit = "Municipio",
+  
+  
+  # 8. Omitir estadísticas 
+  omit.stat = c("ser", "f"),
+  
+  
+  # 9. Fila de Si y No por variable omitida (*)
+  omit.labels = "Control por Municipio",
+  omit.yes.no = c("Sí","No"),
+  
+  # 10. Cambiar el número de decimales de los resultados
+  digits = 3)
+
+
+```
+
+(\*) Stargazer tiene un pequeño pero molesto bug. La opción "omit.yes.no" solo funciona correctamente cuando el primer módelo es un modelo que NO omite variables. Para conocer más sobre este paquete y sus argumentos:
+
+<https://cran.r-project.org/web/packages/stargazer/stargazer.pdf>
+
+------------------------------------------------------------------------
+
+# IV. Mapas con leaflet
+
+asdsadfasdf
+
+------------------------------------------------------------------------
+
+# Harrvard data Scince Lectures
+
+## 1. Herramientas de productividad
+
+```{r, eval=FALSE}
+# 1. Ver los paquetes instaldos
+install.packages()
+
+# 2. Isntalar más de un paquete a la vez
+install.packages(c("dplyr", "ggplot2", "tidyverse"))
+
+# 2. Cargar una libreria
+library(dplyr)
+```

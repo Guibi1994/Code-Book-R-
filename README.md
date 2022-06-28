@@ -1,2 +1,2 @@
-# Code-Book-R-
+# Code-Book-R
 Tips generales en R

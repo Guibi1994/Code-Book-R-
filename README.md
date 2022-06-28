@@ -2,8 +2,14 @@
 Tips generales en R
 
 
-<<<<<<< HEAD
-Esto es una prueba general
+# I. Uso de GitHub
 
-$$y = \beta$$
 
+ 
+```r
+# 1. Cambiar de usuario
+
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+```

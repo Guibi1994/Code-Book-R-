@@ -28,6 +28,12 @@ git push
 git pull
 
 
+# Añadir a un repo existente el compoente git
+git init # Estado dentro del repo
+
+# Conectar un repo local a uno web
+git remote add origin "https://github.com/rairizarry/murders.git"
+
 ```
 
   

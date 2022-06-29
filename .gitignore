@@ -1,4 +1,5 @@
 .Rproj.user
 .Rhistory
 .RData
-.Ruserdata
+.Ruserdata.pruebaignore.txt
+pruebaignore.txt

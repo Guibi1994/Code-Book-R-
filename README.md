@@ -2,7 +2,7 @@
 Tips generales en R
 
 
-# I. Uso de GitHub
+# I. Uso de Git y GitHub
 
 
  
@@ -13,3 +13,7 @@ git config --global user.name "Your Name"
 git config --global user.email "your@email.com"
 
 ```
+
+
+# Algo de UNIX
+

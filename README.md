@@ -21,18 +21,26 @@ git add arhcivo.lqsea
 # 4. "Commit"
 git commit -m "comentario" arhcivo.lqsea
 
-# 5. "Pull"
+# 5. "Push"
+git push
+
+# 6. "Pull"
 git pull
 
 
 ```
 
-
+  
 # Algo de UNIX
 
 ```
 .. # Ir al directorio anterior
+
 rm r- # Borar un directorio con todos sus contenidos
+
 less # Revisar rapidamente el contenido de un archivo
+
+echo "Segunda nueva linea" >> archivo.text # Crear un documento o agregar una lina
+
 
 ```

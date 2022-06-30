@@ -75,4 +75,8 @@ start # abre un arcivo en su programa nativo
 
 nano # abre un editor básico de texto
 
+tar # poner todo un conjutno de datos en una carpeta
+
+ssh # Conectar con otro computador
+
 ```

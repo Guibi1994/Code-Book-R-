@@ -28,16 +28,27 @@ git push
 git pull
 
 
-# Añadir a un repo existente el compoente git
-git init # Estado dentro del repo
+```
+# Conectar un repo existente a uno upstream
+```r
+# I. Crear/mover/tener un archivo en el repo local
+echo “A new repository with my scripts and data” > README.txt
 
-# Conectar un repo local a uno web
+# II. Iniciar Git en el repo
+git init # Estando dentro del repo
+
+# III. realizar un primer commit
+git commit -m "First commit. Adding README file."
+
+# IV. Conectar un repo local a uno web
 git remote add origin "https://github.com/rairizarry/murders.git"
 
-```
+# V. Realiza relizar el primer push
+git push
 
+```
   
-# Algo de UNIX
+# Tipos para manejo de  UNIX
 
 ```
 .. # Ir al directorio anterior

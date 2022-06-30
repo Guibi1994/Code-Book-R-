@@ -16,3 +16,5 @@ Dist_i = \alpha+\beta(Speed_i)+\epsilon_i
 <img src="pruebasmarkdown_files/figure-gfm/grafica_inicial-1.png" style="display: block; margin: auto;" />
 
 <img src="pruebasmarkdown_files/figure-gfm/nano_plot-1.png" style="display: block; margin: auto;" />
+
+![Y_i = \\beta(ojala\_{funcione})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;Y_i%20%3D%20%5Cbeta%28ojala_%7Bfuncione%7D%29 "Y_i = \beta(ojala_{funcione})")

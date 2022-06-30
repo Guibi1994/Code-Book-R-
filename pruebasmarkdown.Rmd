@@ -33,3 +33,5 @@ cars %>% ggplot(aes(speed, dist))+
 cars %>% ggplot(aes(speed))+
   geom_histogram()
 ```
+
+$$Y_i = \beta(ojala_{funcione})$$

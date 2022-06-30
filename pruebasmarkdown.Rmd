@@ -30,5 +30,5 @@ cars %>% ggplot(aes(speed, dist))+
 ```
 
 ```{r}
-source("prueba_ejecutable.R")
+2+3
 ```

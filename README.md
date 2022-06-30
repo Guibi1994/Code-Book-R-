@@ -20,6 +20,7 @@ git add arhcivo.lqsea
 
 # 4. "Commit"
 git commit -m "comentario" arhcivo.lqsea
+git commit -am "comentario" # para enviar todo
 
 # 5. "Push"
 git push
@@ -53,7 +54,15 @@ git push
 ```
 .. # Ir al directorio anterior
 
-rm r- # Borar un directorio con todos sus contenidos
+rm -r # Borar un directorio con todos sus contenidos
+
+rm -f # Borra archivos protegiods
+
+rm -rf #Borrar todo así contenga archivos protegido
+
+ls -a # Mostrar archivos (incluido ocultos)
+
+ls -lart # Mostrat todo en orden cronológico
 
 less # Revisar rapidamente el contenido de un archivo
 

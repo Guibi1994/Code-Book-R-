@@ -32,7 +32,7 @@ git pull
 # Conectar un repo existente a uno upstream
 ```r
 # I. Crear/mover/tener un archivo en el repo local
-echo “A new repository with my scripts and data” > README.txt
+echo “A new repository with my scripts and data” >> README.txt
 
 # II. Iniciar Git en el repo
 git init # Estando dentro del repo

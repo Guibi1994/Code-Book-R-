@@ -66,7 +66,8 @@ ls -lart # Mostrat todo en orden cronológico
 
 less # Revisar rapidamente el contenido de un archivo
 
-echo "Segunda nueva linea" >> archivo.text # Crear un documento o agregar una lina a un documento existente
+echo "Segunda nueva linea" >> archivo.text # Crear un documento o agregar 
+	una lina a un documento existente
 
 start # abre un arcivo en su programa nativo
 

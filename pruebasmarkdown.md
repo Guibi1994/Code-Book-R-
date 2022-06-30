@@ -15,6 +15,4 @@ Dist_i = \alpha+\beta(Speed_i)+\epsilon_i
 
 <img src="pruebasmarkdown_files/figure-gfm/grafica_inicial-1.png" style="display: block; margin: auto;" />
 
-``` r
-source("prueba_ejecutable.R")
-```
+<img src="pruebasmarkdown_files/figure-gfm/nano_plot-1.png" style="display: block; margin: auto;" />

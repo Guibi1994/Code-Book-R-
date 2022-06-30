@@ -29,6 +29,7 @@ cars %>% ggplot(aes(speed, dist))+
         plot.subtitle = element_text(hjust = 0.5))
 ```
 
-```{r}
-2+3
+```{r nano_plot,  echo=FALSE,message=FALSE, warning=FALSE, fig.align='center'}
+cars %>% ggplot(aes(spped))+
+geomhistogram()
 ```

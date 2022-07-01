@@ -71,6 +71,8 @@ less # Revisar rapidamente el contenido de un archivo
 echo "Segunda nueva linea" >> archivo.text # Crear un documento o agregar 
 	una lina a un documento existente
 
+cat # Imprime el contenido de un archivo
+
 start # abre un arcivo en su programa nativo
 
 nano # abre un editor básico de texto

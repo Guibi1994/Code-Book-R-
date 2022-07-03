@@ -14,7 +14,29 @@ output: github_document
 # libreiras
 library(dplyr)
 library(rvest) # para web scraping
+library(ggplot2)
 
 ```
 
-Muchas páginas web estan codificadas en lenguaje "***HTML***" (la mayoria). Cómo lenguaje de porgramación tiene una sintaxis y una estructura lógica: es decir, tiene unos patrones que pueden ser aprovechados a la hora de extrear información. Ejemplo de esto es son los "*nodes*" (nodos) en donde se encapsula difernte información y se representar con lo simbolos "\<" y "\>" , por ejememplo: `<"hola">`
+## Estructura de un HTML
+
+Los documentos **HTML** (*Hypert Text Markup*) son archivos estructurados que contienen una semántica regular, y son los que por lo general podemos observar detrás de las páginas web (la mayoria de ellas). Si dentro de una págian web damos "click secudnario" y luego "inspecionar" (o tambien "**Ctrl+u**"), podemos ver con clairdad el documetno HTMl detras de ella.
+
+Cómo lenguaje de porgramación tiene una sintaxis y una estructura lógica: es decir, tiene unos patrones que pueden ser aprovechados a la hora de extrear información. Un ejemplo de esto es que cada componete de una documento HTML, estan **encapsulados** en etos "**nodos**". Un ejemplo de esto son los títulos en un documento HTML: `<title>"Un gran titulo"</titile>` . Precisamente esta estructura de nodos nos permite detectar patrones y elementos putnuales dentro de estos documentos.
+
+Algunos elementos comúnes en un documento HTML son:
+
+- 
+
+En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto Interno Bruto) por paises](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal) "¡Haz click aqui!"), para emplear las técnicas básicas de web scrping en **R**.
+
+```{r primer_paso}
+
+# 1. Leemos el link a explorar
+
+h <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
+class(h)
+
+cars %>% ggplot(aes(speed, dist))+
+  geom_point()
+```

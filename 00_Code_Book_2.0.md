@@ -24,6 +24,8 @@ ellas). Si dentro de una págian web damos “click secudnario” y luego
 “inspecionar” (o tambien “**Ctrl+u**”), podemos ver con clairdad el
 documetno HTMl detras de ella.
 
+<img src="00_Code_Book_2.0_files/figure-gfm/prueba.png" alt="Preuba" width="540"/>
+
 Cómo lenguaje de porgramación tiene una sintaxis y una estructura
 lógica: es decir, tiene unos patrones que pueden ser aprovechados a la
 hora de extrear información. Un ejemplo de esto es que cada componete de

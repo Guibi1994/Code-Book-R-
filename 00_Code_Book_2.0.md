@@ -24,20 +24,38 @@ ellas). Si dentro de una págian web damos “click secudnario” y luego
 “inspecionar” (o tambien “**Ctrl+u**”), podemos ver con clairdad el
 documetno HTMl detras de ella.
 
+<p align="center">
 <img src="00_Code_Book_2.0_files/figure-gfm/prueba.png" alt="Preuba" width="540"/>
+</p>
 
-Cómo lenguaje de porgramación tiene una sintaxis y una estructura
-lógica: es decir, tiene unos patrones que pueden ser aprovechados a la
-hora de extrear información. Un ejemplo de esto es que cada componete de
-una documento HTML, estan **encapsulados** en etos “**nodos**”. Un
-ejemplo de esto son los títulos en un documento HTML:
-`<title>"Un gran titulo"</titile>` . Precisamente esta estructura de
-nodos nos permite detectar patrones y elementos putnuales dentro de
-estos documentos.
+HTML como lenguaje de porgramación tiene una sintaxis y una estructura
+lógica. Una muestra de esto es que cada uno de los **elementos** de una
+documento HTML esta **encapsulado** en un “**nodo**”. Por ejemplo, el
+título de un documento HTML esta codificado así:
+`<title>"Un gran titulo"</titile>` en donde `<title>` es el nodo del
+titulo. Esta estructura de “nodos” nos permite detectar patrones y
+elementos puntuales dentro de estos documentos.
 
-Algunos elementos comúnes en un documento HTML son:
+<p align="center">
+<img src="00_Code_Book_2.0_files/figure-gfm/prueba2.png" alt="estructura_html" width="484"/>
+</p>
 
--   `code`
+Algunos elementos con sus tespectivos “***tags***” (nombre del nodo)
+comúnes en un documento HTML son:
+
+-   `<!DOCTYPE html>` : Declaración del tipo de docuento (en este caso
+    un HTML)
+
+-   `<head>` : Contiene metadata sobre la pagina HTML
+
+-   `<title>` : El titulo de la pagina en cuestion (el que finalmente se
+    muestra en el buscador/browser)
+
+-   `<body>` :
+
+Otros tags comunes son `<table>`, `<fig>`, `<table>`, `<table>`, etc…
+
+## Web scraping de tablas
 
 En este ejemplo utilizaremos la página web de [Wilkipedia del PIB
 (Prodcucto Interno Bruto) por

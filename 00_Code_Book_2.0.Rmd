@@ -1,0 +1,20 @@
+---
+title: "Code Book ver 2.0"
+author: ""
+date: '2022-07-03'
+output: git_document
+---
+
+# Fundamentos de Web-scraping en R
+
+*Web scraping* o web harvesting hace referencia al conjutno de técnicasl empleadas para extraer información en la wed que no esta necesariamente empaquetada en un objeto o archivo consumible de manera directa .
+
+```{r librerias, echo=TRUE, message=FALSE, warning=FALSE}
+
+# libreiras
+library(dplyr)
+library(rvest) # para web scraping
+
+```
+
+Mucas

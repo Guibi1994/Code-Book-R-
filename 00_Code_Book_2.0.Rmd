@@ -2,7 +2,7 @@
 title: "Code Book ver 2.0"
 author: ""
 date: '2022-07-03'
-output: git_document
+output: github_document
 ---
 
 # Fundamentos de Web-scraping en R
@@ -17,4 +17,4 @@ library(rvest) # para web scraping
 
 ```
 
-Mucas
+Muchas páginas web estan codificadas en lenguaje "***HTML***" (la mayoria). Cómo lenguaje de porgramación tiene una sintaxis y una estructura lógica: es decir, tiene unos patrones que pueden ser aprovechados a la hora de extrear información. Ejemplo de esto es son los "*nodes*" (nodos) en donde se encapsula difernte información y se representar con lo simbolos "\<" y "\>" , por ejememplo: `<"hola">`

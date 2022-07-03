@@ -1,0 +1,22 @@
+Code Book ver 2.0
+================
+2022-07-03
+
+# Fundamentos de Web-scraping en R
+
+*Web scraping* o web harvesting hace referencia al conjutno de técnicasl
+empleadas para extraer información en la wed que no esta necesariamente
+empaquetada en un objeto o archivo consumible de manera directa .
+
+``` r
+# libreiras
+library(dplyr)
+library(rvest) # para web scraping
+```
+
+Muchas páginas web estan codificadas en lenguaje “***HTML***” (la
+mayoria). Cómo lenguaje de porgramación tiene una sintaxis y una
+estructura lógica: es decir, tiene unos patrones que pueden ser
+aprovechados a la hora de extrear información. Ejemplo de esto es son
+los “*nodes*” (nodos) en donde se encapsula difernte información :
+“`<"hola">`”.

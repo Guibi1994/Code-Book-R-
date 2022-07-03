@@ -37,7 +37,7 @@ estos documentos.
 
 Algunos elementos comúnes en un documento HTML son:
 
--   
+-   `code`
 
 En este ejemplo utilizaremos la página web de [Wilkipedia del PIB
 (Prodcucto Interno Bruto) por
@@ -52,10 +52,3 @@ class(h)
 ```
 
     ## [1] "xml_document" "xml_node"
-
-``` r
-cars %>% ggplot(aes(speed, dist))+
-  geom_point()
-```
-
-![](00_Code_Book_2.0_files/figure-gfm/primer_paso-1.png)<!-- -->

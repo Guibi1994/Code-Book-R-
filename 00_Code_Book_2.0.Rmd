@@ -16,6 +16,9 @@ library(dplyr)
 library(rvest) # para web scraping
 library(ggplot2)
 
+library(kableExtra)
+library(tidyr)
+
 ```
 
 ## Estructura de un HTML
@@ -55,3 +58,33 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
 h <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
 class(h)
 ```
+
+# Notas sobre data/wrangling
+
+```{r, results='asis', fig.align='center'}
+
+#  Base inicial
+nivel_edu <- data.frame(
+  pais = c(sample("Colombia",5,T),sample("Peru",5,T),sample("Venezuela",5,T)),
+  materia = c("matematicas","lenguaje", "ingles", "fisica", "quimica"),
+  p_2014 = rnorm(15,50,15),
+  p_2016 = rnorm(15,55,10),
+  p_2018 = rnorm(15,54,13),
+  p_2020 = rnorm(15,61,8),
+  p_2022 = rnorm(15,67,19))
+
+nivel_edu %>% kable() 
+```
+
+```{r, results='asis'}
+
+nivel_edu %>%  pivot_longer(starts_with("p_"), "periodo",values_to = "notas")
+```
+
+#### gather()
+
+-   key = "nombre" de las variable ID
+
+-   value = "nombre" de la variable de valor
+
+-   .../ c(...) = selección de las variables ID

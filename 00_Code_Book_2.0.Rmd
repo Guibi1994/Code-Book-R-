@@ -41,50 +41,107 @@ Algunos elementos con sus tespectivos "***tags***" (nombre del nodo) comúnes en
 
 -   `<head>` : Contiene metadata sobre la pagina HTML
 
--   `<title>` : El titulo de la pagina en cuestion (el que finalmente se muestra en el buscador/browser)
+-   `<title>` : El título de la pagina en cuestion (el que finalmente se muestra en el buscador/browser)
 
--   `<body>` :
+-   `<body>` :El contiendo de la página en cuestión.
 
-Otros tags comunes son `<table>`, `<fig>`, `<table>`, `<table>`, etc...
+Otros tags comunes son `<p>`(para denominar parrafos), `<table>`(para denominar tablas), `<img>`(para denominar imágenes), `<map>`(para denóminar mapas), etc... [En el éste enlace puedes ver una lista de tagas comúnes en un documento HTML](https://www.w3schools.com/TAgs/default.asp "Tags de referencia").
 
 ## Web scraping de tablas
 
-En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto Interno Bruto) por paises](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal) "¡Haz click aqui!"), para emplear las técnicas básicas de web scrping en **R**.
+En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto Interno Bruto) por paises](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal) "¡Haz click aqui!"), para emplear las técnicas básicas de web scrping en **R**. Los pasos a seguir asumen que ya instalamos y cargamos la libreria Rvest: `library(rvest)`
 
-```{r primer_paso}
+1.  Extraemos la URL (el *link*) de la página en donde se encutra nuestra tabla
 
-# 1. Leemos el link a explorar
+2.  Con la función `read_html` podemos leer el archivo HTML detrás del link. Este será leido como un arichivo tipo XML en forma de *lista* de elementos.
 
-h <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
-class(h)
-```
+    ```{r, message=FALSE, echo=TRUE}
+    PIB_paises <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
+    ```
+
+3.  El siguiente paso, consite en utilizar el comando `html_nodes` (OJO "nodes" no "node") para buscar el nodo que nos interesa. En este caso el nodo que nos interesa es `<table>` por que estamos extrallendo directamente una tabla del documento HTML. Basicamente estamos solicitando filtrar todos los nodos y solo quedarnos con aquellos cuyo ***tag*** sea "table", y estos quedara guardados en una *lista.*
+
+    ```{r, message=FALSE, echo=TRUE}
+    PIB_paises <- PIB_paises %>% html_nodes("table")
+    ```
+
+4.  El siguiente paso puede ser un poco engañoso. Una vez extraigamos el nodo "table", realmente estamos extrallendo no uno sino todos los nodos llamados "table" presentes en el documento HTML. En nuestro caso, podemos ver cómo una vez extremos el nodo "table" tenemos un total de 7 nodos con ese nombre ¿cuál es el número del nodo que nos interesa?
+
+    Para saberlo podemos inspeccionar la página (**Ctrl+u**) y buscar (**Ctrl+f**) "\<table", y luego deteminar cuál es el número del nodo "table" que da apertura a la tabla que nos interesa extraer. Otra forma es con prueba y error, pero es más efectivo de la primera manera. En nuestro ejemplo (como se ve a continuación), el nodo #3 que encontramos en el documento HTML el que da apertura a la tabla que nos interesa extraer.
+
+    <p align="center">
+    <img src="00_Code_Book_2.0_files/figure-gfm/prueba3.png" alt="estructura_html" width="484"/>
+    </p>
+
+    En nuestro ejemplo (como se en la imágen anterior), el **3*er* nodo** que encontramos en el documento HTML, es el que da apertura a la tabla que nos interesa extraer.
+
+5.  Ya sabemos que 3*er* elemento en nuestra lista es el nodo que contiene una **tabla** que nos interesa. Lo siguiente es usar el comando `html_table()` para especificar que es un nodo "tipo tabla", y extraer 3er nodo posteriormente (podemo utilizar la sintáxis básica de R para indicar la consulta del 3er elemento de la lista: `[[3]]` o tambien `[3]` ). Podemos tambien de una vez en el mismo paso converir el resultado a una "data.frame" y/o a un "tible".
+
+    ```{r, message=FALSE, echo=TRUE}
+    PIB_paises <- PIB_paises %>% 
+      # Leer la/s tabla/s del documento HTML
+      html_table() %>%
+      # Acceder el 3er elemento de la lista
+      .[[3]] %>% 
+      # Cambiar a formato de base de datos
+      as.data.frame()
+
+    head(PIB_paises,5)
+    ```
+
+6.  Ya los pasos siguientes son realizar los arreglos correspondientes que se tengan que hacer para cada paso puntual. Pero ya extraimos la información. Incluso podemos hacer todo en una sola línea de código
+
+    ```{r ,message=FALSE,echo=TRUE, warning=FALSE}
+
+    PIB_paises <- 
+      # Leer HTML
+      read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)") %>% 
+      # Extrer nodos llamados "table"
+      html_nodes("table") %>% 
+      # Coveritir a formato tabla
+      html_table() %>% 
+      # Extaer el elemnto de interes
+      .[[3]] %>% 
+      # Transforamr a una base de datos
+      as.data.frame() %>% 
+      # Algunas pasos inciales de deuperació de datos
+      janitor::row_to_names(row_number = 1) %>% 
+      rename(Pais = 1,Region = 2, PIB_FMI=3,p_FMI=4,PIB_ONU=5,p_ONU=6,PIB_BM = 7,
+             p_BM = 8) %>% 
+      mutate(across(PIB_FMI:p_BM,~gsub(",","",.))) %>% as_tibble()
+
+    PIB_paises
+    ```
 
 # Notas sobre data/wrangling
 
-```{r, results='asis', fig.align='center'}
+```{r}
 
 #  Base inicial
 nivel_edu <- data.frame(
+  region = "America latina",
   pais = c(sample("Colombia",5,T),sample("Peru",5,T),sample("Venezuela",5,T)),
   materia = c("matematicas","lenguaje", "ingles", "fisica", "quimica"),
   p_2014 = rnorm(15,50,15),
   p_2016 = rnorm(15,55,10),
   p_2018 = rnorm(15,54,13),
   p_2020 = rnorm(15,61,8),
-  p_2022 = rnorm(15,67,19))
+  p_2022 = rnorm(15,67,19)) %>% 
+  as_tibble()
 
-nivel_edu %>% kable() 
+nivel_edu
 ```
 
-```{r, results='asis'}
-
-nivel_edu %>%  pivot_longer(starts_with("p_"), "periodo",values_to = "notas")
+```{r}
+# pivot_longer() cumple la misma función de "melt()"
+nivel_edu <- nivel_edu %>% 
+  pivot_longer(starts_with("p_"), "periodo",values_to = "notas")
+nivel_edu
 ```
 
-#### gather()
+```{r}
+# pivot_wider() cumple la misma función que "dcast()"
+nivel_edu %>%
+  pivot_wider(names_from = materia, values_from = notas)
 
--   key = "nombre" de las variable ID
-
--   value = "nombre" de la variable de valor
-
--   .../ c(...) = selección de las variables ID
+```

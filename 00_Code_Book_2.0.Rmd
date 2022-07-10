@@ -1,6 +1,6 @@
 ---
 title: "Code Book ver 2.0"
-author: ""
+author: "Guibor Camargo (guibor.camargo@urosario.edu.co)||"
 date: '2022-07-03'
 output: github_document
 ---
@@ -59,21 +59,23 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
     PIB_paises <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
     ```
 
-3.  El siguiente paso, consite en utilizar el comando `html_nodes` (OJO "nodes" no "node") para buscar el nodo que nos interesa. En este caso el nodo que nos interesa es `<table>` por que estamos extrallendo directamente una tabla del documento HTML. Basicamente estamos solicitando filtrar todos los nodos y solo quedarnos con aquellos cuyo ***tag*** sea "table", y estos quedara guardados en una *lista.*
+3.  El siguiente paso, consite en utilizar el comando `html_nodes` ( OJO "nodes" no "node") para buscar el nodo que nos interesa. En este caso el nodo que nos interesa es `<table>` por que estamos extrallendo directamente una tabla del documento HTML. Basicamente estamos solicitando filtrar todos los nodos y solo quedarnos con aquellos cuyo ***tag*** sea "table", y estos quedara guardados en una *lista.*
 
     ```{r, message=FALSE, echo=TRUE}
     PIB_paises <- PIB_paises %>% html_nodes("table")
     ```
 
-4.  El siguiente paso puede ser un poco engañoso. Una vez extraigamos el nodo "table", realmente estamos extrallendo no uno sino todos los nodos llamados "table" presentes en el documento HTML. En nuestro caso, podemos ver cómo una vez extremos el nodo "table" tenemos un total de 7 nodos con ese nombre ¿cuál es el número del nodo que nos interesa?
-
+4.  El siguiente paso puede ser un poco engañoso. Una vez extraigamos el nodo "table", realmente estamos extrallendo no uno, sino todos los nodos llamados "table" presentes en el documento HTML. En nuestro caso, podemos ver cómo una vez extremos el nodo "table" tenemos un total de 7 nodos con ese nombre ¿cuál es el número del nodo que nos interesa?   
+      
     Para saberlo podemos inspeccionar la página (**Ctrl+u**) y buscar (**Ctrl+f**) "\<table", y luego deteminar cuál es el número del nodo "table" que da apertura a la tabla que nos interesa extraer. Otra forma es con prueba y error, pero es más efectivo de la primera manera. En nuestro ejemplo (como se ve a continuación), el nodo #3 que encontramos en el documento HTML el que da apertura a la tabla que nos interesa extraer.
 
     <p align="center">
     <img src="00_Code_Book_2.0_files/figure-gfm/prueba3.png" alt="estructura_html" width="484"/>
     </p>
 
-    En nuestro ejemplo (como se en la imágen anterior), el **3*er* nodo** que encontramos en el documento HTML, es el que da apertura a la tabla que nos interesa extraer.
+    En nuestro ejemplo (como se en la imágen anterior), el **3*er* nodo** que encontramos en el documento HTML, es el que da apertura a la tabla que nos interesa extraer.   
+      
+    :gift: **TIP** :gift:**:** En algunos casos, dentro del código HTML las tablas tiene un "id" despues del *tag*: (ejm) `<table id="Nombre_tabla">` . En estos casos podemos usar el comando `html_nodes("table#Nombre_tabla")` para extraer específicamente la tabla que queremos. Sin embargo en este caso (como un muchos) no existe esta posilidad por la falta de un indentficador específico de la tabla.
 
 5.  Ya sabemos que 3*er* elemento en nuestra lista es el nodo que contiene una **tabla** que nos interesa. Lo siguiente es usar el comando `html_table()` para especificar que es un nodo "tipo tabla", y extraer 3er nodo posteriormente (podemo utilizar la sintáxis básica de R para indicar la consulta del 3er elemento de la lista: `[[3]]` o tambien `[3]` ). Podemos tambien de una vez en el mismo paso converir el resultado a una "data.frame" y/o a un "tible".
 
@@ -89,22 +91,25 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
     head(PIB_paises,5)
     ```
 
-6.  Ya los pasos siguientes son realizar los arreglos correspondientes que se tengan que hacer para cada paso puntual. Pero ya extraimos la información. Incluso podemos hacer todo en una sola línea de código
+6.  :recycle: **RESUMEN:** Ya los pasos siguientes son realizar los arreglos correspondientes que se tengan que hacer para cada paso puntual. Pero ya extraimos la información. Incluso podemos hacer todo en una sola línea de código
 
     ```{r ,message=FALSE,echo=TRUE, warning=FALSE}
 
     PIB_paises <- 
-      # Leer HTML
+      # 1. Leer HTML desde la URL
       read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)") %>% 
-      # Extrer nodos llamados "table"
+      # 2. Extrer nodos llamados "table"
       html_nodes("table") %>% 
-      # Coveritir a formato tabla
+      # 3. Convertir a formato tabla
       html_table() %>% 
-      # Extaer el elemnto de interes
+      # 4. Extaer el elemnto de interes
       .[[3]] %>% 
-      # Transforamr a una base de datos
+      # 5. Transformar a una base de datos
       as.data.frame() %>% 
-      # Algunas pasos inciales de deuperació de datos
+      
+      
+      # - - - - - - - - - - - -
+      # Pasos EXTRA: Limpiar un poco la base (cada caso es particular)
       janitor::row_to_names(row_number = 1) %>% 
       rename(Pais = 1,Region = 2, PIB_FMI=3,p_FMI=4,PIB_ONU=5,p_ONU=6,PIB_BM = 7,
              p_BM = 8) %>% 

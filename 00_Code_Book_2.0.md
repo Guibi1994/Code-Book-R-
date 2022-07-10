@@ -1,5 +1,6 @@
 Code Book ver 2.0
 ================
+Guibor Camargo (<guibor.camargo@urosario.edu.co>)\|\|
 2022-07-03
 
 # Fundamentos de Web-scraping en R
@@ -82,7 +83,7 @@ seguir asumen que ya instalamos y cargamos la libreria Rvest:
     PIB_paises <- read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)")
     ```
 
-3.  El siguiente paso, consite en utilizar el comando `html_nodes` (OJO
+3.  El siguiente paso, consite en utilizar el comando `html_nodes` ( OJO
     “nodes” no “node”) para buscar el nodo que nos interesa. En este
     caso el nodo que nos interesa es `<table>` por que estamos
     extrallendo directamente una tabla del documento HTML. Basicamente
@@ -119,6 +120,14 @@ seguir asumen que ya instalamos y cargamos la libreria Rvest:
     nodo** que encontramos en el documento HTML, es el que da apertura a
     la tabla que nos interesa extraer.
 
+    :gift: **TIP** :gift:**:** En algunos casos, dentro del código HTML
+    las tablas tiene un “id” despues del *tag*: (ejm)
+    `<table id="Nombre_tabla">` . En estos casos podemos usar el comando
+    `html_nodes("table#Nombre_tabla")` para extraer específicamente la
+    tabla que queremos. Sin embargo en este caso (como un muchos) no
+    existe esta posilidad por la falta de un indentficador específico de
+    la tabla.
+
 5.  Ya sabemos que 3*er* elemento en nuestra lista es el nodo que
     contiene una **tabla** que nos interesa. Lo siguiente es usar el
     comando `html_table()` para especificar que es un nodo “tipo tabla”,
@@ -152,23 +161,27 @@ seguir asumen que ya instalamos y cargamos la libreria Rvest:
         ## 4          [n 3]2020         14,722,731               2020
         ## 5               2020          4,975,415               2020
 
-6.  Ya los pasos siguientes son realizar los arreglos correspondientes
-    que se tengan que hacer para cada paso puntual. Pero ya extraimos la
-    información. Incluso podemos hacer todo en una sola línea de código
+6.  :recycle: **RESUMEN:** Ya los pasos siguientes son realizar los
+    arreglos correspondientes que se tengan que hacer para cada paso
+    puntual. Pero ya extraimos la información. Incluso podemos hacer
+    todo en una sola línea de código
 
     ``` r
     PIB_paises <- 
-      # Leer HTML
+      # 1. Leer HTML desde la URL
       read_html("https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)") %>% 
-      # Extrer nodos llamados "table"
+      # 2. Extrer nodos llamados "table"
       html_nodes("table") %>% 
-      # Coveritir a formato tabla
+      # 3. Convertir a formato tabla
       html_table() %>% 
-      # Extaer el elemnto de interes
+      # 4. Extaer el elemnto de interes
       .[[3]] %>% 
-      # Transforamr a una base de datos
+      # 5. Transformar a una base de datos
       as.data.frame() %>% 
-      # Algunas pasos inciales de deuperació de datos
+
+
+      # - - - - - - - - - - - -
+      # Pasos EXTRA: Limpiar un poco la base (cada caso es particular)
       janitor::row_to_names(row_number = 1) %>% 
       rename(Pais = 1,Region = 2, PIB_FMI=3,p_FMI=4,PIB_ONU=5,p_ONU=6,PIB_BM = 7,
              p_BM = 8) %>% 
@@ -213,21 +226,21 @@ nivel_edu
     ## # A tibble: 15 x 8
     ##    region         pais      materia     p_2014 p_2016 p_2018 p_2020 p_2022
     ##    <chr>          <chr>     <chr>        <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-    ##  1 America latina Colombia  matematicas   73.5   37.7   52.0   57.5   46.6
-    ##  2 America latina Colombia  lenguaje      64.8   51.0   50.4   66.9   71.1
-    ##  3 America latina Colombia  ingles        56.3   71.8   38.2   61.1   72.2
-    ##  4 America latina Colombia  fisica        69.0   68.8   48.5   64.6   43.6
-    ##  5 America latina Colombia  quimica       39.7   52.2   59.9   56.5   63.1
-    ##  6 America latina Peru      matematicas   39.6   60.4   43.9   52.0   67.5
-    ##  7 America latina Peru      lenguaje      75.4   56.6   52.9   62.6   63.8
-    ##  8 America latina Peru      ingles        57.9   46.7   48.8   71.2   78.5
-    ##  9 America latina Peru      fisica        36.9   56.8   43.6   49.2   83.0
-    ## 10 America latina Peru      quimica       69.8   49.7   45.9   55.8   38.3
-    ## 11 America latina Venezuela matematicas   47.9   56.8   71.2   52.2   75.8
-    ## 12 America latina Venezuela lenguaje      40.8   48.3   58.3   65.3   62.0
-    ## 13 America latina Venezuela ingles        44.0   56.8   50.3   61.2   71.2
-    ## 14 America latina Venezuela fisica        49.2   73.8   45.9   58.2   85.0
-    ## 15 America latina Venezuela quimica       49.7   49.3   47.4   57.9   65.4
+    ##  1 America latina Colombia  matematicas   51.6   61.9  59.9    56.5   75.7
+    ##  2 America latina Colombia  lenguaje      39.4   47.9  66.0    62.0   63.7
+    ##  3 America latina Colombia  ingles        58.6   57.3  53.3    70.9   81.6
+    ##  4 America latina Colombia  fisica        32.6   73.3  46.3    69.5   82.0
+    ##  5 America latina Colombia  quimica       54.1   48.9  52.7    54.1   77.5
+    ##  6 America latina Peru      matematicas   78.7   60.0  49.6    67.7   66.1
+    ##  7 America latina Peru      lenguaje      49.4   67.3  48.0    61.6   30.6
+    ##  8 America latina Peru      ingles        24.5   74.9  74.9    65.9   62.3
+    ##  9 America latina Peru      fisica        56.6   39.9  35.5    58.4   61.1
+    ## 10 America latina Peru      quimica       62.4   56.6  56.4    63.0   50.8
+    ## 11 America latina Venezuela matematicas   70.7   55.5  53.5    52.7   67.9
+    ## 12 America latina Venezuela lenguaje      59.0   57.8   3.13   53.5   66.0
+    ## 13 America latina Venezuela ingles        43.9   54.8  64.6    60.2   48.5
+    ## 14 America latina Venezuela fisica        28.6   57.3  62.4    63.1   57.9
+    ## 15 America latina Venezuela quimica       67.3   61.2  57.5    69.8   61.5
 
 ``` r
 # pivot_longer() cumple la misma función de "melt()"
@@ -239,16 +252,16 @@ nivel_edu
     ## # A tibble: 75 x 5
     ##    region         pais     materia     periodo notas
     ##    <chr>          <chr>    <chr>       <chr>   <dbl>
-    ##  1 America latina Colombia matematicas p_2014   73.5
-    ##  2 America latina Colombia matematicas p_2016   37.7
-    ##  3 America latina Colombia matematicas p_2018   52.0
-    ##  4 America latina Colombia matematicas p_2020   57.5
-    ##  5 America latina Colombia matematicas p_2022   46.6
-    ##  6 America latina Colombia lenguaje    p_2014   64.8
-    ##  7 America latina Colombia lenguaje    p_2016   51.0
-    ##  8 America latina Colombia lenguaje    p_2018   50.4
-    ##  9 America latina Colombia lenguaje    p_2020   66.9
-    ## 10 America latina Colombia lenguaje    p_2022   71.1
+    ##  1 America latina Colombia matematicas p_2014   51.6
+    ##  2 America latina Colombia matematicas p_2016   61.9
+    ##  3 America latina Colombia matematicas p_2018   59.9
+    ##  4 America latina Colombia matematicas p_2020   56.5
+    ##  5 America latina Colombia matematicas p_2022   75.7
+    ##  6 America latina Colombia lenguaje    p_2014   39.4
+    ##  7 America latina Colombia lenguaje    p_2016   47.9
+    ##  8 America latina Colombia lenguaje    p_2018   66.0
+    ##  9 America latina Colombia lenguaje    p_2020   62.0
+    ## 10 America latina Colombia lenguaje    p_2022   63.7
     ## # ... with 65 more rows
 
 ``` r
@@ -260,18 +273,18 @@ nivel_edu %>%
     ## # A tibble: 15 x 8
     ##    region         pais      periodo matematicas lenguaje ingles fisica quimica
     ##    <chr>          <chr>     <chr>         <dbl>    <dbl>  <dbl>  <dbl>   <dbl>
-    ##  1 America latina Colombia  p_2014         73.5     64.8   56.3   69.0    39.7
-    ##  2 America latina Colombia  p_2016         37.7     51.0   71.8   68.8    52.2
-    ##  3 America latina Colombia  p_2018         52.0     50.4   38.2   48.5    59.9
-    ##  4 America latina Colombia  p_2020         57.5     66.9   61.1   64.6    56.5
-    ##  5 America latina Colombia  p_2022         46.6     71.1   72.2   43.6    63.1
-    ##  6 America latina Peru      p_2014         39.6     75.4   57.9   36.9    69.8
-    ##  7 America latina Peru      p_2016         60.4     56.6   46.7   56.8    49.7
-    ##  8 America latina Peru      p_2018         43.9     52.9   48.8   43.6    45.9
-    ##  9 America latina Peru      p_2020         52.0     62.6   71.2   49.2    55.8
-    ## 10 America latina Peru      p_2022         67.5     63.8   78.5   83.0    38.3
-    ## 11 America latina Venezuela p_2014         47.9     40.8   44.0   49.2    49.7
-    ## 12 America latina Venezuela p_2016         56.8     48.3   56.8   73.8    49.3
-    ## 13 America latina Venezuela p_2018         71.2     58.3   50.3   45.9    47.4
-    ## 14 America latina Venezuela p_2020         52.2     65.3   61.2   58.2    57.9
-    ## 15 America latina Venezuela p_2022         75.8     62.0   71.2   85.0    65.4
+    ##  1 America latina Colombia  p_2014         51.6    39.4    58.6   32.6    54.1
+    ##  2 America latina Colombia  p_2016         61.9    47.9    57.3   73.3    48.9
+    ##  3 America latina Colombia  p_2018         59.9    66.0    53.3   46.3    52.7
+    ##  4 America latina Colombia  p_2020         56.5    62.0    70.9   69.5    54.1
+    ##  5 America latina Colombia  p_2022         75.7    63.7    81.6   82.0    77.5
+    ##  6 America latina Peru      p_2014         78.7    49.4    24.5   56.6    62.4
+    ##  7 America latina Peru      p_2016         60.0    67.3    74.9   39.9    56.6
+    ##  8 America latina Peru      p_2018         49.6    48.0    74.9   35.5    56.4
+    ##  9 America latina Peru      p_2020         67.7    61.6    65.9   58.4    63.0
+    ## 10 America latina Peru      p_2022         66.1    30.6    62.3   61.1    50.8
+    ## 11 America latina Venezuela p_2014         70.7    59.0    43.9   28.6    67.3
+    ## 12 America latina Venezuela p_2016         55.5    57.8    54.8   57.3    61.2
+    ## 13 America latina Venezuela p_2018         53.5     3.13   64.6   62.4    57.5
+    ## 14 America latina Venezuela p_2020         52.7    53.5    60.2   63.1    69.8
+    ## 15 America latina Venezuela p_2022         67.9    66.0    48.5   57.9    61.5

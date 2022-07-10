@@ -23,9 +23,21 @@ Este guía es para aprender nociones básicas e intermedias de análisis de dato
 
 -   [Fundamentos de Web-scraping en R](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#fundamentos-de-web-scraping-en-r)
 
-    -   
+    -   [Estructura de un HTML (lo que hay que saber)](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#estructura-de-un-html-lo-que-hay-que-saber)
 
--   dasd
+    -   [Web scraping de tablas](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#web-scraping-de-tablas)
+
+    -   Web scraping de páginas
+
+    -   Web scrapping de múltiples páginas (páginas anidadas)
+
+    -   Web scrapping en páginas de consultas
+
+    -   Cuando hay un "captcha"
+
+    -   Web scraping en entórnos de JavaCript
+
+-   [Notas sobre Data wrangling](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#notas-sobre-datawrangling)
 
 # "Regex" manejo básico
 
@@ -162,7 +174,7 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
 
 ## Web scraping en entórnos de JavaCript
 
-# Notas sobre data/wrangling
+# Notas sobre Data wrangling
 
 ```{r}
 

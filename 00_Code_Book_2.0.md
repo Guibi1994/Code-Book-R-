@@ -5,16 +5,24 @@ Guibor Camargo (<guibor.camargo@urosario.edu.co>)\|\|
 
 # “Regex” manejo básico
 
-“Regex” es una sintáxis universal de textos. Es básicamente una manera
-común en muchos lenguajes de programación que se emplea para hacer
+“Regex” es una sintáxis universal de textos. Es básicamente una lenguaje
+común, en muchos entornos de programación, que se emplea para hacer
 consultas dentro de un texto o “string”. En “regex” cada letra, espacio,
 simbolo o número es un **caracter independiente** y tiene una manera
 difernte de consultarse. El conocimiento básico de esta sintáxis para el
 manejo de textos, es uno de los pilares fundamentales de otras técnicas
 como “text mining”, “web-scraping” y “sentiment analysis” entre otras.
+Lo mostrado aca se base principalmente en las clases de [análisis de
+textos del curso edX de harvard en
+Data-Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso")
 
 ``` r
-library()
+# Liberria principal
+library(stringr)
+
+# Librerias complementarias
+library(dplyr) # Manejo de bases de datos
+library(tidyr) # Manejo de bases de datos
 ```
 
 # Fundamentos de Web-scraping en R
@@ -24,7 +32,7 @@ empleadas para extraer información en la wed que no esta necesariamente
 empaquetada en un objeto o archivo consumible de manera directa .
 
 ``` r
-# libreiras principal
+# libreira principal
 library(rvest) # Para web scraping
 
 # librerias complementarias
@@ -250,21 +258,21 @@ nivel_edu
     ## # A tibble: 15 x 8
     ##    region         pais      materia     p_2014 p_2016 p_2018 p_2020 p_2022
     ##    <chr>          <chr>     <chr>        <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-    ##  1 America latina Colombia  matematicas   41.4   62.2   63.8   60.4   61.8
-    ##  2 America latina Colombia  lenguaje      53.6   64.4   65.2   55.4   58.3
-    ##  3 America latina Colombia  ingles        65.3   59.1   57.4   54.4   79.1
-    ##  4 America latina Colombia  fisica        39.4   45.0   48.7   55.3   78.0
-    ##  5 America latina Colombia  quimica       49.0   48.7   32.2   63.4   41.8
-    ##  6 America latina Peru      matematicas   49.2   54.5   56.1   43.0   65.4
-    ##  7 America latina Peru      lenguaje      54.6   56.5   56.1   53.1   59.9
-    ##  8 America latina Peru      ingles        61.2   71.2   42.0   60.1   37.1
-    ##  9 America latina Peru      fisica        29.3   52.0   57.0   50.9   56.8
-    ## 10 America latina Peru      quimica       56.0   68.6   32.8   50.7   57.1
-    ## 11 America latina Venezuela matematicas   50.2   49.3   54.1   82.8   69.2
-    ## 12 America latina Venezuela lenguaje      75.7   60.1   62.4   56.5   42.0
-    ## 13 America latina Venezuela ingles        82.7   58.0   33.6   61.3   79.0
-    ## 14 America latina Venezuela fisica        61.2   76.9   64.8   57.5   67.8
-    ## 15 America latina Venezuela quimica       52.2   56.8   36.0   51.7   43.8
+    ##  1 America latina Colombia  matematicas   54.1   55.7   21.2   53.2   45.9
+    ##  2 America latina Colombia  lenguaje      43.3   61.7   85.7   62.4   45.8
+    ##  3 America latina Colombia  ingles        59.6   48.5   44.4   59.4   39.7
+    ##  4 America latina Colombia  fisica        40.8   69.7   64.1   66.2   44.0
+    ##  5 America latina Colombia  quimica       59.8   60.5   58.0   60.6   80.1
+    ##  6 America latina Peru      matematicas   59.8   58.4   34.7   76.1   74.9
+    ##  7 America latina Peru      lenguaje      53.8   57.2   68.8   39.8   65.5
+    ##  8 America latina Peru      ingles        58.6   52.2   37.0   54.5   97.3
+    ##  9 America latina Peru      fisica        60.8   58.1   43.1   63.1   80.7
+    ## 10 America latina Peru      quimica       56.5   53.3   54.9   56.1   54.1
+    ## 11 America latina Venezuela matematicas   31.3   57.0   33.9   71.0   38.6
+    ## 12 America latina Venezuela lenguaje      84.0   42.1   31.0   55.3   64.8
+    ## 13 America latina Venezuela ingles        42.3   53.8   45.2   44.0   34.7
+    ## 14 America latina Venezuela fisica        49.4   67.6   51.5   57.4   71.1
+    ## 15 America latina Venezuela quimica       59.0   41.7   50.5   57.3   44.2
 
 ``` r
 # pivot_longer() cumple la misma función de "melt()"
@@ -276,16 +284,16 @@ nivel_edu
     ## # A tibble: 75 x 5
     ##    region         pais     materia     periodo notas
     ##    <chr>          <chr>    <chr>       <chr>   <dbl>
-    ##  1 America latina Colombia matematicas p_2014   41.4
-    ##  2 America latina Colombia matematicas p_2016   62.2
-    ##  3 America latina Colombia matematicas p_2018   63.8
-    ##  4 America latina Colombia matematicas p_2020   60.4
-    ##  5 America latina Colombia matematicas p_2022   61.8
-    ##  6 America latina Colombia lenguaje    p_2014   53.6
-    ##  7 America latina Colombia lenguaje    p_2016   64.4
-    ##  8 America latina Colombia lenguaje    p_2018   65.2
-    ##  9 America latina Colombia lenguaje    p_2020   55.4
-    ## 10 America latina Colombia lenguaje    p_2022   58.3
+    ##  1 America latina Colombia matematicas p_2014   54.1
+    ##  2 America latina Colombia matematicas p_2016   55.7
+    ##  3 America latina Colombia matematicas p_2018   21.2
+    ##  4 America latina Colombia matematicas p_2020   53.2
+    ##  5 America latina Colombia matematicas p_2022   45.9
+    ##  6 America latina Colombia lenguaje    p_2014   43.3
+    ##  7 America latina Colombia lenguaje    p_2016   61.7
+    ##  8 America latina Colombia lenguaje    p_2018   85.7
+    ##  9 America latina Colombia lenguaje    p_2020   62.4
+    ## 10 America latina Colombia lenguaje    p_2022   45.8
     ## # ... with 65 more rows
 
 ``` r
@@ -297,18 +305,18 @@ nivel_edu %>%
     ## # A tibble: 15 x 8
     ##    region         pais      periodo matematicas lenguaje ingles fisica quimica
     ##    <chr>          <chr>     <chr>         <dbl>    <dbl>  <dbl>  <dbl>   <dbl>
-    ##  1 America latina Colombia  p_2014         41.4     53.6   65.3   39.4    49.0
-    ##  2 America latina Colombia  p_2016         62.2     64.4   59.1   45.0    48.7
-    ##  3 America latina Colombia  p_2018         63.8     65.2   57.4   48.7    32.2
-    ##  4 America latina Colombia  p_2020         60.4     55.4   54.4   55.3    63.4
-    ##  5 America latina Colombia  p_2022         61.8     58.3   79.1   78.0    41.8
-    ##  6 America latina Peru      p_2014         49.2     54.6   61.2   29.3    56.0
-    ##  7 America latina Peru      p_2016         54.5     56.5   71.2   52.0    68.6
-    ##  8 America latina Peru      p_2018         56.1     56.1   42.0   57.0    32.8
-    ##  9 America latina Peru      p_2020         43.0     53.1   60.1   50.9    50.7
-    ## 10 America latina Peru      p_2022         65.4     59.9   37.1   56.8    57.1
-    ## 11 America latina Venezuela p_2014         50.2     75.7   82.7   61.2    52.2
-    ## 12 America latina Venezuela p_2016         49.3     60.1   58.0   76.9    56.8
-    ## 13 America latina Venezuela p_2018         54.1     62.4   33.6   64.8    36.0
-    ## 14 America latina Venezuela p_2020         82.8     56.5   61.3   57.5    51.7
-    ## 15 America latina Venezuela p_2022         69.2     42.0   79.0   67.8    43.8
+    ##  1 America latina Colombia  p_2014         54.1     43.3   59.6   40.8    59.8
+    ##  2 America latina Colombia  p_2016         55.7     61.7   48.5   69.7    60.5
+    ##  3 America latina Colombia  p_2018         21.2     85.7   44.4   64.1    58.0
+    ##  4 America latina Colombia  p_2020         53.2     62.4   59.4   66.2    60.6
+    ##  5 America latina Colombia  p_2022         45.9     45.8   39.7   44.0    80.1
+    ##  6 America latina Peru      p_2014         59.8     53.8   58.6   60.8    56.5
+    ##  7 America latina Peru      p_2016         58.4     57.2   52.2   58.1    53.3
+    ##  8 America latina Peru      p_2018         34.7     68.8   37.0   43.1    54.9
+    ##  9 America latina Peru      p_2020         76.1     39.8   54.5   63.1    56.1
+    ## 10 America latina Peru      p_2022         74.9     65.5   97.3   80.7    54.1
+    ## 11 America latina Venezuela p_2014         31.3     84.0   42.3   49.4    59.0
+    ## 12 America latina Venezuela p_2016         57.0     42.1   53.8   67.6    41.7
+    ## 13 America latina Venezuela p_2018         33.9     31.0   45.2   51.5    50.5
+    ## 14 America latina Venezuela p_2020         71.0     55.3   44.0   57.4    57.3
+    ## 15 America latina Venezuela p_2022         38.6     64.8   34.7   71.1    44.2

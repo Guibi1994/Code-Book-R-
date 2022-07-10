@@ -5,21 +5,34 @@ date: '2022-07-03'
 output: github_document
 ---
 
+```{r librerias_general, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(rvest)
+library(stringr)
+
+```
+
 # "Regex" manejo básico
 
-"Regex" es una sintáxis universal de textos. Es básicamente una manera común en muchos lenguajes de programación que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
+"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras. Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de harvard en Data-Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso")
 
-```{r}
-library()
+```{r, eval=FALSE, echo=TRUE}
+# Liberria principal
+library(stringr)
+
+# Librerias complementarias
+library(dplyr) # Manejo de bases de datos
+library(tidyr) # Manejo de bases de datos
 ```
 
 # Fundamentos de Web-scraping en R
 
 *Web scraping* o web harvesting hace referencia al conjutno de técnicasl empleadas para extraer información en la wed que no esta necesariamente empaquetada en un objeto o archivo consumible de manera directa .
 
-```{r librerias, echo=TRUE, message=FALSE, warning=FALSE}
+```{r, eval=FALSE, echo=TRUE}
 
-# libreiras principal
+# libreira principal
 library(rvest) # Para web scraping
 
 # librerias complementarias

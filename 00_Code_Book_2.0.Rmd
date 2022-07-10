@@ -8,14 +8,18 @@ output: github_document
 ```{r librerias_general, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
 library(tidyr)
-library(rvest)
+library(ggplot2)
 library(stringr)
-
+library(rvest)
 ```
+
+# Introducción
+
+Este guía es para aprender nociones básicas e intermedias de análisis de datos **R**. La intención es guíar al lector de manera consitente y resumida por alguas de las principales técnias en ciencia de datos y econometría en **R**. De esta manera, no se asume nada (o casi nada) sobre el lector: es decir, es una guía tanto para principiantes como para usuarios con conocimientos previos en programación y/o estadísticas.
 
 # "Regex" manejo básico
 
-"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras. Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de harvard en Data-Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso")
+"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras. Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de la Universidad de Harvard en Data Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso")
 
 ```{r, eval=FALSE, echo=TRUE}
 # Liberria principal
@@ -38,7 +42,7 @@ library(rvest) # Para web scraping
 # librerias complementarias
 library(dplyr) # Manejo de bases de datos
 library(tidyr) # Manejo de bases de datos
-library(ggplot2) # creaicón de gráficas
+library(ggplot2) # Creaicón de gráficas
 ```
 
 ## Estructura de un HTML (lo que hay que saber)
@@ -146,7 +150,7 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
 
 ### Cuando hay un "captcha"
 
-## Web scraping en entórnos de 
+## Web scraping en entórnos de JavaCript
 
 # Notas sobre data/wrangling
 

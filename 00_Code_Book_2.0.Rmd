@@ -5,7 +5,11 @@ date: '2022-07-03'
 output: github_document
 ---
 
-# Regex básico
+# "Regex" manejo básico
+
+```{r}
+
+```
 
 # Fundamentos de Web-scraping en R
 
@@ -13,14 +17,13 @@ output: github_document
 
 ```{r librerias, echo=TRUE, message=FALSE, warning=FALSE}
 
-# libreiras
-library(dplyr)
-library(rvest) # para web scraping
-library(ggplot2)
+# libreiras principal
+library(rvest) # Para web scraping
 
-library(kableExtra)
-library(tidyr)
-
+# librerias complementarias
+library(dplyr) # Manejo de bases de datos
+library(tidyr) # Manejo de bases de datos
+library(ggplot2) # creaicón de gráficas
 ```
 
 ## Estructura de un HTML (lo que hay que saber)
@@ -119,6 +122,16 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
 
     PIB_paises
     ```
+
+## Web scrapping de paginas
+
+## Web scrapping de múltiples páginas (páginas anidadas)
+
+## Web scrapping en páginas con consultas
+
+### Cuando hay un "captcha"
+
+## Web scraping en entórnos de 
 
 # Notas sobre data/wrangling
 

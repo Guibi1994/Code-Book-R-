@@ -52,6 +52,18 @@ library(dplyr) # Manejo de bases de datos
 library(tidyr) # Manejo de bases de datos
 ```
 
+Auque hay algunas funciones detro de *R-base* que hacen análisis de textos, la libreria "StringR" (`stringr::`) contiene varias funciones múy utiles que exploraremos en esta guía. Antes de comenzar, crearemos un ejemplo de **string** con el que trabajeremos a lo largo de los ejemplos.
+
+```{r ejemplo_string, echo=TRUE}
+
+x <- c("colombia001","colombia002", "002peru", # Numeros y letras
+       "COLOMBIA","PERU","CoLOmBiA","PeRu",    # Mayusculas minúsculas
+       "Cólómbíä","pËrù",                      # Con simbolos    
+       "1","2","3"," 4"," 5"," 6", "345","789","567", # Numeros y espacios
+       "[99]1234","[88]567","[9]666[8]","[an]456[id]") # Entre simbolos
+
+```
+
 # Fundamentos de Web-scraping en R
 
 *Web scraping* o web harvesting hace referencia al conjutno de técnicasl empleadas para extraer información en la wed que no esta necesariamente empaquetada en un objeto o archivo consumible de manera directa .

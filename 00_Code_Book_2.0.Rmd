@@ -7,8 +7,10 @@ output: github_document
 
 # "Regex" manejo básico
 
-```{r}
+"Regex" es una sintáxis universal de textos. Es básicamente una manera común en muchos lenguajes de programación que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
 
+```{r}
+library()
 ```
 
 # Fundamentos de Web-scraping en R

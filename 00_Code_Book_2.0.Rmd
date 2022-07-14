@@ -41,7 +41,17 @@ Este guía es para aprender nociones básicas e intermedias de análisis de dato
 
 # "Regex" manejo básico
 
-"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string". En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras. Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de la Universidad de Harvard en Data Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso")
+"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string": es decir **para identificar patrones en una cadena de texto o *string***. En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
+
+Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de la Universidad de Harvard en Data Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso"). Sin embargo tambien hay muchos recursos sobre este tema en internet:
+
+-   [Cheat sheet para la libreria StringR](https://evoldyn.gitlab.io/evomics-2018/ref-sheets/R_strings.pdf)
+
+-   [Cheat sheet regex](https://cheatography.com/davechild/cheat-sheets/regular-expressions/) (ejemplo 1)
+
+-   [Cheat sheet regex](https://www.rexegg.com/regex-quickstart.html) (ejemplo 2)
+
+-   etc (...)
 
 ```{r, eval=FALSE, echo=TRUE}
 # Liberria principal
@@ -56,11 +66,18 @@ Auque hay algunas funciones detro de *R-base* que hacen análisis de textos, la 
 
 ```{r ejemplo_string, echo=TRUE}
 
-x <- c("colombia001","colombia002", "002peru", # Numeros y letras
-       "COLOMBIA","PERU","CoLOmBiA","PeRu",    # Mayusculas minúsculas
-       "Cólómbíä","pËrù",                      # Con simbolos    
-       "1","2","3"," 4"," 5"," 6", "345","789","567", # Numeros y espacios
-       "[99]1234","[88]567","[9]666[8]","[an]456[id]") # Entre simbolos
+# Aglunos ehemplos de cadenas de textos
+x <- c(
+  # Numeros y letras
+  "colombia001","colombia002", "002peru", "01 Colombia Peru",
+  # Mayusculas minúsculas
+  "COLOMBIA","PERU","CoLOmBiA","PeRu",
+  # Con simbolos
+  "$Cólómbíä999","%pËrù444",
+  # Numeros y espacios
+  "1","2","3"," 4"," 5"," 6", "345","789","567", 
+  # Entre simbolos
+  "[99]1234","[88]567","[9]666[8]","[an]456[id]","(9)5","{7}2")
 
 ```
 

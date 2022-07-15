@@ -44,3 +44,11 @@ pr <- str_split(x,",", simplify = T)
 pr[1,]
 
 
+x <- c("Nombre,Apellido,Cedula","Guibor,Camargo,1082983326",
+       "Tatiana,Ortiz,1020801135")
+
+
+str_split(x,pattern = ",") %>% map_data()
+
+
+str_view_all(polls$dates, "\\d+\\s[a-zA-Z]{3,5}")

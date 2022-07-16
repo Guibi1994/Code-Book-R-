@@ -42,8 +42,6 @@ estadísticas.
 
 # Regex y text mining
 
-## ¿Qué es regex?
-
 ``` r
 # Liberrias principales
 library(stringr)
@@ -53,6 +51,8 @@ library(tidytext)
 library(dplyr) # Manejo de bases de datos
 library(tidyr) # Manejo de bases de datos
 ```
+
+## ¿Qué es regex?
 
 “Regex” (contracción del término *expresion regular* en inglés) es una
 sintáxis universal de textos. Es básicamente una lenguaje común, en casi
@@ -116,20 +116,52 @@ frecuentemente en una análisis típico. Trabajaremos en este ejemplo con
 el siguiente conjutno de *strings*:
 
 ``` r
-ejemplo <- c("123", " 123", "abc", " def", "abc123")
+ejemplo <- c("123", " 456", "abc", " def", "abc123", "000abc789")
 ejemplo
 ```
 
-    ## [1] "123"    " 123"   "abc"    " def"   "abc123"
+    ## [1] "123"       " 456"      "abc"       " def"      "abc123"    "000abc789"
 
 -   `str_view()` : Es uno de los comándos más utiles de esta libreria,
     ya que nos permite previzualizar el resultado de nuestra aplicar
     nuestra expresión regular a un o varios textos.
 
     ``` r
-    str_view(ejemplo, "^\\d{0,}")
+    str_view(ejemplo, "[a-z]+") # a
+    str_view(ejemplo, "^\\d+") # b
+    str_view(ejemplo, "\\d+") # c
+    str_view_all(ejemplo, "\\d+") # d
     ```
 
+    -   **a:** En este ejemplo la expresión regular solicita identificar
+        cualquier caracter alfabéticos en minuscola (`[a-z]`) , siempre
+        que este aparesca una o más veces (`+`).
+
+    -   **b:** En el segundo ejemplo, solicitamos ver todas aquellos
+        elementos que comienzen (`^`) por uno o más (`+`) dígitos
+        (`\\d`). Notese que si cambiara el `+` por `{1,}` el resultado
+        sería el mismo. Se puede observar como el string “`456`” no es
+        seleccioando pues su primer caracter no es un número sino un
+        espacio (en regegex los espacios se notan como `\\s`).
+
+    -   **c:** En este ejemplo el caracter “`456`” si es seleccioando
+        dado la omisión del indicativo `^` . Esto quiere decir que se
+        seleccionen todos los números consecutivos independientemente de
+        en que posición esten. Sin embargo los números “`789`” del
+        último *strign* no son seleccioandos. La razón de esto es por
+        que una vez satisfecha la consulta, todo lo demás no es
+        seleccionado.
+
+    -   **d:** Para identificar entonces no solo el primet “march” sino
+        todos los posibles match, podemos usar la función
+        `str_vie_all()` y de este modo si quedarán seleccioandos todos
+        los números, sin importar orden, repetición o posición.
+
+<p align="center">
+<img src="00_Code_Book_2.0_files/figure-gfm/prueba4.png" alt="Preuba" width="540"/>
+</p>
+
+-   df
 -   sad
 
 # Fundamentos de Web-scraping en R
@@ -365,21 +397,21 @@ nivel_edu
     ## # A tibble: 15 x 8
     ##    region         pais      materia     p_2014 p_2016 p_2018 p_2020 p_2022
     ##    <chr>          <chr>     <chr>        <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-    ##  1 America latina Colombia  matematicas  43.6    59.4   48.3   46.5   43.7
-    ##  2 America latina Colombia  lenguaje     64.2    64.7   48.6   59.0   48.4
-    ##  3 America latina Colombia  ingles       56.1    52.9   71.8   79.3   72.9
-    ##  4 America latina Colombia  fisica       37.9    58.2   70.1   47.9   53.8
-    ##  5 America latina Colombia  quimica      25.1    64.1   62.2   62.2   45.8
-    ##  6 America latina Peru      matematicas  60.5    51.4   58.8   60.5   57.4
-    ##  7 America latina Peru      lenguaje     62.8    68.5   50.4   51.0   62.8
-    ##  8 America latina Peru      ingles       62.3    74.0   39.4   70.0   47.0
-    ##  9 America latina Peru      fisica        7.66   48.0   52.9   69.9   45.5
-    ## 10 America latina Peru      quimica      73.3    38.1   56.7   54.0   57.0
-    ## 11 America latina Venezuela matematicas  24.1    70.3   81.5   63.2   66.5
-    ## 12 America latina Venezuela lenguaje     30.5    42.8   69.0   63.7  110. 
-    ## 13 America latina Venezuela ingles       27.3    49.1   69.2   67.5  118. 
-    ## 14 America latina Venezuela fisica       69.8    50.8   57.0   53.9   46.0
-    ## 15 America latina Venezuela quimica      56.6    76.6   41.5   70.4   71.1
+    ##  1 America latina Colombia  matematicas   57.7   62.7   59.3   51.2   59.3
+    ##  2 America latina Colombia  lenguaje      33.0   55.0   59.8   64.6   92.3
+    ##  3 America latina Colombia  ingles        75.1   59.4   31.6   56.8   24.5
+    ##  4 America latina Colombia  fisica        41.4   53.9   37.3   52.8   42.9
+    ##  5 America latina Colombia  quimica       62.0   66.5   43.5   70.1   52.8
+    ##  6 America latina Peru      matematicas   79.2   52.2   70.8   59.1   77.3
+    ##  7 America latina Peru      lenguaje      66.7   57.9   56.3   74.3   43.0
+    ##  8 America latina Peru      ingles        40.8   49.5   70.3   63.1   22.5
+    ##  9 America latina Peru      fisica        17.5   58.4   40.1   72.5   74.8
+    ## 10 America latina Peru      quimica       43.1   66.0   66.9   61.6   37.5
+    ## 11 America latina Venezuela matematicas   80.9   77.7   50.6   61.1   62.1
+    ## 12 America latina Venezuela lenguaje      35.8   47.0   49.8   63.0   82.5
+    ## 13 America latina Venezuela ingles        59.3   54.9   62.3   64.3   80.9
+    ## 14 America latina Venezuela fisica        62.5   58.9   30.2   65.9   65.3
+    ## 15 America latina Venezuela quimica       56.7   51.2   56.5   63.0   45.0
 
 ``` r
 # pivot_longer() cumple la misma función de "melt()"
@@ -391,16 +423,16 @@ nivel_edu
     ## # A tibble: 75 x 5
     ##    region         pais     materia     periodo notas
     ##    <chr>          <chr>    <chr>       <chr>   <dbl>
-    ##  1 America latina Colombia matematicas p_2014   43.6
-    ##  2 America latina Colombia matematicas p_2016   59.4
-    ##  3 America latina Colombia matematicas p_2018   48.3
-    ##  4 America latina Colombia matematicas p_2020   46.5
-    ##  5 America latina Colombia matematicas p_2022   43.7
-    ##  6 America latina Colombia lenguaje    p_2014   64.2
-    ##  7 America latina Colombia lenguaje    p_2016   64.7
-    ##  8 America latina Colombia lenguaje    p_2018   48.6
-    ##  9 America latina Colombia lenguaje    p_2020   59.0
-    ## 10 America latina Colombia lenguaje    p_2022   48.4
+    ##  1 America latina Colombia matematicas p_2014   57.7
+    ##  2 America latina Colombia matematicas p_2016   62.7
+    ##  3 America latina Colombia matematicas p_2018   59.3
+    ##  4 America latina Colombia matematicas p_2020   51.2
+    ##  5 America latina Colombia matematicas p_2022   59.3
+    ##  6 America latina Colombia lenguaje    p_2014   33.0
+    ##  7 America latina Colombia lenguaje    p_2016   55.0
+    ##  8 America latina Colombia lenguaje    p_2018   59.8
+    ##  9 America latina Colombia lenguaje    p_2020   64.6
+    ## 10 America latina Colombia lenguaje    p_2022   92.3
     ## # ... with 65 more rows
 
 ``` r
@@ -412,18 +444,18 @@ nivel_edu %>%
     ## # A tibble: 15 x 8
     ##    region         pais      periodo matematicas lenguaje ingles fisica quimica
     ##    <chr>          <chr>     <chr>         <dbl>    <dbl>  <dbl>  <dbl>   <dbl>
-    ##  1 America latina Colombia  p_2014         43.6     64.2   56.1  37.9     25.1
-    ##  2 America latina Colombia  p_2016         59.4     64.7   52.9  58.2     64.1
-    ##  3 America latina Colombia  p_2018         48.3     48.6   71.8  70.1     62.2
-    ##  4 America latina Colombia  p_2020         46.5     59.0   79.3  47.9     62.2
-    ##  5 America latina Colombia  p_2022         43.7     48.4   72.9  53.8     45.8
-    ##  6 America latina Peru      p_2014         60.5     62.8   62.3   7.66    73.3
-    ##  7 America latina Peru      p_2016         51.4     68.5   74.0  48.0     38.1
-    ##  8 America latina Peru      p_2018         58.8     50.4   39.4  52.9     56.7
-    ##  9 America latina Peru      p_2020         60.5     51.0   70.0  69.9     54.0
-    ## 10 America latina Peru      p_2022         57.4     62.8   47.0  45.5     57.0
-    ## 11 America latina Venezuela p_2014         24.1     30.5   27.3  69.8     56.6
-    ## 12 America latina Venezuela p_2016         70.3     42.8   49.1  50.8     76.6
-    ## 13 America latina Venezuela p_2018         81.5     69.0   69.2  57.0     41.5
-    ## 14 America latina Venezuela p_2020         63.2     63.7   67.5  53.9     70.4
-    ## 15 America latina Venezuela p_2022         66.5    110.   118.   46.0     71.1
+    ##  1 America latina Colombia  p_2014         57.7     33.0   75.1   41.4    62.0
+    ##  2 America latina Colombia  p_2016         62.7     55.0   59.4   53.9    66.5
+    ##  3 America latina Colombia  p_2018         59.3     59.8   31.6   37.3    43.5
+    ##  4 America latina Colombia  p_2020         51.2     64.6   56.8   52.8    70.1
+    ##  5 America latina Colombia  p_2022         59.3     92.3   24.5   42.9    52.8
+    ##  6 America latina Peru      p_2014         79.2     66.7   40.8   17.5    43.1
+    ##  7 America latina Peru      p_2016         52.2     57.9   49.5   58.4    66.0
+    ##  8 America latina Peru      p_2018         70.8     56.3   70.3   40.1    66.9
+    ##  9 America latina Peru      p_2020         59.1     74.3   63.1   72.5    61.6
+    ## 10 America latina Peru      p_2022         77.3     43.0   22.5   74.8    37.5
+    ## 11 America latina Venezuela p_2014         80.9     35.8   59.3   62.5    56.7
+    ## 12 America latina Venezuela p_2016         77.7     47.0   54.9   58.9    51.2
+    ## 13 America latina Venezuela p_2018         50.6     49.8   62.3   30.2    56.5
+    ## 14 America latina Venezuela p_2020         61.1     63.0   64.3   65.9    63.0
+    ## 15 America latina Venezuela p_2022         62.1     82.5   80.9   65.3    45.0

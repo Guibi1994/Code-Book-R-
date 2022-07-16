@@ -42,8 +42,6 @@ Este guía es para aprender nociones básicas e intermedias de análisis de dato
 
 # Regex y text mining
 
-## ¿Qué es regex?
-
 ```{r, eval=FALSE, echo=TRUE}
 # Liberrias principales
 library(stringr)
@@ -53,6 +51,8 @@ library(tidytext)
 library(dplyr) # Manejo de bases de datos
 library(tidyr) # Manejo de bases de datos
 ```
+
+## ¿Qué es regex?
 
 "Regex" (contracción del término *expresion regular* en inglés) es una sintáxis universal de textos. Es básicamente una lenguaje común, en casi cualquier entorno de programación, que se emplea para hacer consultas dentro de un texto o "string": es decir **para identificar patrones en una cadena de texto o *string***. En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
 
@@ -69,7 +69,7 @@ Lo mostrado aca se base principalmente en las clases de [análisis de textos del
 Anque en esta guía no profundizaremos sobre el tema de regex, en la siguiente tabla se mostraran algunos comnados que son muy útiles y comunes a gran parte de las operaciones que se comunmente podemos hacer con regex en **R**. Finalmente, es importante tener en cuenta que todos los caracteres especiales en regex en **R** (`?`, `%`, `(`, `[`, `@`, etc) es necesario escribirlos con el prefijo "`\\`" (`\\?`, `\\%`, `\\(`, `\\[`, `\\@`, etc) , para que no se confundan con funciones dentro de regex.
 
 |                 Funcion                 | Descripción                                                                                           |
-|:---------------------------------------:|-------------------------------------------------------------------------------------------------------|
+|:-------------------:|---------------------------------------------------|
 |                 `(.*)`                  | Todo                                                                                                  |
 |                 `[^]*`                  | Todo exepto. Ejemplo: `[^.]*` siginifica todo exepto el simbolo punto (".")                           |
 |                `^` o `$`                | Al **principio** o al **final** de un string                                                          |
@@ -88,16 +88,32 @@ Anque en esta guía no profundizaremos sobre el tema de regex, en la siguiente t
 La libreria "`stringr`" esta diseñada para facilitar el análisis de textos a partir de expresiones regulares -"regex". Posee un gran número de funciones muy utiles y vale la pena darle una revisada más profunda realizando algunos ejercicis por cuanta propia. Sin embargo, veremos acá un par de funciones muy útiles de esta libreria, que son usadas frecuentemente en una análisis típico. Trabajaremos en este ejemplo con el siguiente conjutno de *strings*:
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
-ejemplo <- c("123", " 123", "abc", " def", "abc123")
+ejemplo <- c("123", " 456", "abc", " def", "abc123", "000abc789")
 ejemplo
 ```
 
--   `str_view()` : Es uno de los comándos más utiles de esta libreria, ya que nos permite previzualizar el resultado de nuestra aplicar nuestra expresión regular a un o varios textos.  
+-   `str_view()` : Es uno de los comándos más utiles de esta libreria, ya que nos permite previzualizar el resultado de nuestra aplicar nuestra expresión regular a un o varios textos.
 
     ```{r, eval=FALSE}
-    str_view(ejemplo, "^\\d{0,}")
+    str_view(ejemplo, "[a-z]+") # a
+    str_view(ejemplo, "^\\d+") # b
+    str_view(ejemplo, "\\d+") # c
+    str_view_all(ejemplo, "\\d+") # d
     ```
 
+    -   **a:** En este ejemplo la expresión regular solicita identificar cualquier caracter alfabéticos en minuscola (`[a-z]`) , siempre que este aparesca una o más veces (`+`).
+
+    -   **b:** En el segundo ejemplo, solicitamos ver todas aquellos elementos que comienzen (`^`) por uno o más (`+`) dígitos (`\\d`). Notese que si cambiara el `+` por `{1,}` el resultado sería el mismo. Se puede observar como el string "`456`" no es seleccioando pues su primer caracter no es un número sino un espacio (en regegex los espacios se notan como `\\s`).
+
+    -   **c:** En este ejemplo el caracter "`456`" si es seleccioando dado la omisión del indicativo `^` . Esto quiere decir que se seleccionen todos los números consecutivos independientemente de en que posición esten. Sin embargo los números "`789`" del último *strign* no son seleccioandos. La razón de esto es por que una vez satisfecha la consulta, todo lo demás no es seleccionado.
+
+    -   **d:** Para identificar entonces no solo el primet "march" sino todos los posibles match, podemos usar la función `str_vie_all()` y de este modo si quedarán seleccioandos todos los números, sin importar orden, repetición o posición.
+
+<p align="center">
+<img src="00_Code_Book_2.0_files/figure-gfm/prueba4.png" alt="Preuba" width="540"/>
+</p>
+
+-   df
 -   sad
 
 # Fundamentos de Web-scraping en R

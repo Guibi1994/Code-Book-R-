@@ -11,6 +11,7 @@ library(tidyr)
 library(ggplot2)
 library(stringr)
 library(rvest)
+library(tidyr)
 ```
 
 # Introducción
@@ -39,9 +40,21 @@ Este guía es para aprender nociones básicas e intermedias de análisis de dato
 
 -   [Notas sobre Data wrangling](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#notas-sobre-datawrangling)
 
-# "Regex" manejo básico
+# Regex y text mining
 
-"Regex" es una sintáxis universal de textos. Es básicamente una lenguaje común, en muchos entornos de programación, que se emplea para hacer consultas dentro de un texto o "string": es decir **para identificar patrones en una cadena de texto o *string***. En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
+## ¿Qué es regex?
+
+```{r, eval=FALSE, echo=TRUE}
+# Liberrias principales
+library(stringr)
+library(tidytext)
+
+# Librerias complementarias
+library(dplyr) # Manejo de bases de datos
+library(tidyr) # Manejo de bases de datos
+```
+
+"Regex" (contracción del término *expresion regular* en inglés) es una sintáxis universal de textos. Es básicamente una lenguaje común, en casi cualquier entorno de programación, que se emplea para hacer consultas dentro de un texto o "string": es decir **para identificar patrones en una cadena de texto o *string***. En "regex" cada letra, espacio, simbolo o número es un **caracter independiente** y tiene una manera difernte de consultarse. El conocimiento básico de esta sintáxis para el manejo de textos, es uno de los pilares fundamentales de otras técnicas como "text mining", "web-scraping" y "sentiment analysis" entre otras.
 
 Lo mostrado aca se base principalmente en las clases de [análisis de textos del curso edX de la Universidad de Harvard en Data Science](https://rafalab.github.io/dslibro/procesamiento-de-cadenas.html "Contulte acá el capítulo de manejo de textos de ese curso"). Sin embargo tambien hay muchos recursos sobre este tema en internet:
 
@@ -53,33 +66,39 @@ Lo mostrado aca se base principalmente en las clases de [análisis de textos del
 
 -   etc (...)
 
-```{r, eval=FALSE, echo=TRUE}
-# Liberria principal
-library(stringr)
+Anque en esta guía no profundizaremos sobre el tema de regex, en la siguiente tabla se mostraran algunos comnados que son muy útiles y comunes a gran parte de las operaciones que se comunmente podemos hacer con regex en **R**. Finalmente, es importante tener en cuenta que todos los caracteres especiales en regex en **R** (`?`, `%`, `(`, `[`, `@`, etc) es necesario escribirlos con el prefijo "`\\`" (`\\?`, `\\%`, `\\(`, `\\[`, `\\@`, etc) , para que no se confundan con funciones dentro de regex.
 
-# Librerias complementarias
-library(dplyr) # Manejo de bases de datos
-library(tidyr) # Manejo de bases de datos
+|                 Funcion                 | Descripción                                                                                           |
+|:---------------------------------------:|-------------------------------------------------------------------------------------------------------|
+|                 `(.*)`                  | Todo                                                                                                  |
+|                 `[^]*`                  | Todo exepto. Ejemplo: `[^.]*` siginifica todo exepto el simbolo punto (".")                           |
+|                `^` o `$`                | Al **principio** o al **final** de un string                                                          |
+|     `[a-z]` o `[A-Z]` o `[a-zA-Z]`      | Cualquier caracter alfabético en minusculas, en mayusculas o sin importar si es mayuscula o minuscula |
+| `[:lower:]` o `[:upper:]` o `[:alpha:]` | Cualquier caracter alfabético en minusculas, en mayusculas o sin importar si es mayuscula o minuscula |
+|                `[a-z ]`                 | Cualquier caracter alfabético en minusculas y/o cualquier espacio                                     |
+|      `[:digit:]` o `\\d` o `[0-9]`      | Cualquier caracter numérico                                                                           |
+|                   `?`                   | Identificar 0 a 1 vez ("*puede estar o no*")                                                          |
+|                   `+`                   | Identificar 1 o más veces ("*Está al menos una vez*")                                                 |
+|                   `*`                   | Identificar 0 o más veces ("*puede no estar o estar muchas veces*")                                   |
+|        `{2}` o `{2,}` o `{2,4}`         | Identificar 2 veces, 2 o más veces, o de 2 a 4 veces                                                  |
+|                 `(  )`                  | Definir grupos de extracción                                                                          |
+
+## La libreria "stringr"
+
+La libreria "`stringr`" esta diseñada para facilitar el análisis de textos a partir de expresiones regulares -"regex". Posee un gran número de funciones muy utiles y vale la pena darle una revisada más profunda realizando algunos ejercicis por cuanta propia. Sin embargo, veremos acá un par de funciones muy útiles de esta libreria, que son usadas frecuentemente en una análisis típico. Trabajaremos en este ejemplo con el siguiente conjutno de *strings*:
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+ejemplo <- c("123", " 123", "abc", " def", "abc123")
+ejemplo
 ```
 
-Auque hay algunas funciones detro de *R-base* que hacen análisis de textos, la libreria "StringR" (`stringr::`) contiene varias funciones múy utiles que exploraremos en esta guía. Antes de comenzar, crearemos un ejemplo de **string** con el que trabajeremos a lo largo de los ejemplos.
+-   `str_view()` : Es uno de los comándos más utiles de esta libreria, ya que nos permite previzualizar el resultado de nuestra aplicar nuestra expresión regular a un o varios textos.  
 
-```{r ejemplo_string, echo=TRUE}
+    ```{r, eval=FALSE}
+    str_view(ejemplo, "^\\d{0,}")
+    ```
 
-# Aglunos ehemplos de cadenas de textos
-x <- c(
-  # Numeros y letras
-  "colombia001","colombia002", "002peru", "01 Colombia Peru",
-  # Mayusculas minúsculas
-  "COLOMBIA","PERU","CoLOmBiA","PeRu",
-  # Con simbolos
-  "$Cólómbíä999","%pËrù444",
-  # Numeros y espacios
-  "1","2","3"," 4"," 5"," 6", "345","789","567", 
-  # Entre simbolos
-  "[99]1234","[88]567","[9]666[8]","[an]456[id]","(9)5","{7}2")
-
-```
+-   sad
 
 # Fundamentos de Web-scraping en R
 
@@ -140,16 +159,16 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
     PIB_paises <- PIB_paises %>% html_nodes("table")
     ```
 
-4.  El siguiente paso puede ser un poco engañoso. Una vez extraigamos el nodo "table", realmente estamos extrallendo no uno, sino todos los nodos llamados "table" presentes en el documento HTML. En nuestro caso, podemos ver cómo una vez extremos el nodo "table" tenemos un total de 7 nodos con ese nombre ¿cuál es el número del nodo que nos interesa?   
-      
+4.  El siguiente paso puede ser un poco engañoso. Una vez extraigamos el nodo "table", realmente estamos extrallendo no uno, sino todos los nodos llamados "table" presentes en el documento HTML. En nuestro caso, podemos ver cómo una vez extremos el nodo "table" tenemos un total de 7 nodos con ese nombre ¿cuál es el número del nodo que nos interesa?
+
     Para saberlo podemos inspeccionar la página (**Ctrl+u**) y buscar (**Ctrl+f**) "\<table", y luego deteminar cuál es el número del nodo "table" que da apertura a la tabla que nos interesa extraer. Otra forma es con prueba y error, pero es más efectivo de la primera manera. En nuestro ejemplo (como se ve a continuación), el nodo #3 que encontramos en el documento HTML el que da apertura a la tabla que nos interesa extraer.
 
     <p align="center">
     <img src="00_Code_Book_2.0_files/figure-gfm/prueba3.png" alt="estructura_html" width="484"/>
     </p>
 
-    En nuestro ejemplo (como se en la imágen anterior), el **3*er* nodo** que encontramos en el documento HTML, es el que da apertura a la tabla que nos interesa extraer.   
-      
+    En nuestro ejemplo (como se en la imágen anterior), el **3*er* nodo** que encontramos en el documento HTML, es el que da apertura a la tabla que nos interesa extraer.
+
     :gift: **TIP** :gift:**:** En algunos casos, dentro del código HTML las tablas tiene un "id" despues del *tag*: (ejm) `<table id="Nombre_tabla">` . En estos casos podemos usar el comando `html_nodes("table#Nombre_tabla")` para extraer específicamente la tabla que queremos. Sin embargo en este caso (como un muchos) no existe esta posilidad por la falta de un indentficador específico de la tabla.
 
 5.  Ya sabemos que 3*er* elemento en nuestra lista es el nodo que contiene una **tabla** que nos interesa. Lo siguiente es usar el comando `html_table()` para especificar que es un nodo "tipo tabla", y extraer 3er nodo posteriormente (podemo utilizar la sintáxis básica de R para indicar la consulta del 3er elemento de la lista: `[[3]]` o tambien `[3]` ). Podemos tambien de una vez en el mismo paso converir el resultado a una "data.frame" y/o a un "tible".

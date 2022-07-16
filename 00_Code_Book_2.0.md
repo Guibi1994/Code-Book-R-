@@ -40,17 +40,29 @@ estadísticas.
 -   [Notas sobre Data
     wrangling](https://github.com/Guibi1994/Code-Book-R-/blob/main/00_Code_Book_2.0.md#notas-sobre-datawrangling)
 
-# “Regex” manejo básico
+# Regex y text mining
 
-“Regex” es una sintáxis universal de textos. Es básicamente una lenguaje
-común, en muchos entornos de programación, que se emplea para hacer
-consultas dentro de un texto o “string”: es decir **para identificar
-patrones en una cadena de texto o *string***. En “regex” cada letra,
-espacio, simbolo o número es un **caracter independiente** y tiene una
-manera difernte de consultarse. El conocimiento básico de esta sintáxis
-para el manejo de textos, es uno de los pilares fundamentales de otras
-técnicas como “text mining”, “web-scraping” y “sentiment analysis” entre
-otras.
+## ¿Qué es regex?
+
+``` r
+# Liberrias principales
+library(stringr)
+library(tidytext)
+
+# Librerias complementarias
+library(dplyr) # Manejo de bases de datos
+library(tidyr) # Manejo de bases de datos
+```
+
+“Regex” (contracción del término *expresion regular* en inglés) es una
+sintáxis universal de textos. Es básicamente una lenguaje común, en casi
+cualquier entorno de programación, que se emplea para hacer consultas
+dentro de un texto o “string”: es decir **para identificar patrones en
+una cadena de texto o *string***. En “regex” cada letra, espacio,
+simbolo o número es un **caracter independiente** y tiene una manera
+difernte de consultarse. El conocimiento básico de esta sintáxis para el
+manejo de textos, es uno de los pilares fundamentales de otras técnicas
+como “text mining”, “web-scraping” y “sentiment analysis” entre otras.
 
 Lo mostrado aca se base principalmente en las clases de [análisis de
 textos del curso edX de la Universidad de Harvard en Data
@@ -69,35 +81,56 @@ Sin embargo tambien hay muchos recursos sobre este tema en internet:
 
 -   etc (…)
 
-``` r
-# Liberria principal
-library(stringr)
+Anque en esta guía no profundizaremos sobre el tema de regex, en la
+siguiente tabla se mostraran algunos comnados que son muy útiles y
+comunes a gran parte de las operaciones que se comunmente podemos hacer
+con regex en **R**. Finalmente, es importante tener en cuenta que todos
+los caracteres especiales en regex en **R** (`?`, `%`, `(`, `[`, `@`,
+etc) es necesario escribirlos con el prefijo “`\\`” (`\\?`, `\\%`,
+`\\(`, `\\[`, `\\@`, etc) , para que no se confundan con funciones
+dentro de regex.
 
-# Librerias complementarias
-library(dplyr) # Manejo de bases de datos
-library(tidyr) # Manejo de bases de datos
+|                 Funcion                 | Descripción                                                                                           |
+|:---------------------------------------:|-------------------------------------------------------------------------------------------------------|
+|                 `(.*)`                  | Todo                                                                                                  |
+|                 `[^]*`                  | Todo exepto. Ejemplo: `[^.]*` siginifica todo exepto el simbolo punto (“.”)                           |
+|                `^` o `$`                | Al **principio** o al **final** de un string                                                          |
+|     `[a-z]` o `[A-Z]` o `[a-zA-Z]`      | Cualquier caracter alfabético en minusculas, en mayusculas o sin importar si es mayuscula o minuscula |
+| `[:lower:]` o `[:upper:]` o `[:alpha:]` | Cualquier caracter alfabético en minusculas, en mayusculas o sin importar si es mayuscula o minuscula |
+|                `[a-z ]`                 | Cualquier caracter alfabético en minusculas y/o cualquier espacio                                     |
+|      `[:digit:]` o `\\d` o `[0-9]`      | Cualquier caracter numérico                                                                           |
+|                   `?`                   | Identificar 0 a 1 vez (“*puede estar o no*”)                                                          |
+|                   `+`                   | Identificar 1 o más veces (“*Está al menos una vez*”)                                                 |
+|                   `*`                   | Identificar 0 o más veces (“*puede no estar o estar muchas veces*”)                                   |
+|        `{2}` o `{2,}` o `{2,4}`         | Identificar 2 veces, 2 o más veces, o de 2 a 4 veces                                                  |
+|                 `(  )`                  | Definir grupos de extracción                                                                          |
+
+## La libreria “stringr”
+
+La libreria “`stringr`” esta diseñada para facilitar el análisis de
+textos a partir de expresiones regulares -“regex”. Posee un gran número
+de funciones muy utiles y vale la pena darle una revisada más profunda
+realizando algunos ejercicis por cuanta propia. Sin embargo, veremos acá
+un par de funciones muy útiles de esta libreria, que son usadas
+frecuentemente en una análisis típico. Trabajaremos en este ejemplo con
+el siguiente conjutno de *strings*:
+
+``` r
+ejemplo <- c("123", " 123", "abc", " def", "abc123")
+ejemplo
 ```
 
-Auque hay algunas funciones detro de *R-base* que hacen análisis de
-textos, la libreria “StringR” (`stringr::`) contiene varias funciones
-múy utiles que exploraremos en esta guía. Antes de comenzar, crearemos
-un ejemplo de **string** con el que trabajeremos a lo largo de los
-ejemplos.
+    ## [1] "123"    " 123"   "abc"    " def"   "abc123"
 
-``` r
-# Aglunos ehemplos de cadenas de textos
-x <- c(
-  # Numeros y letras
-  "colombia001","colombia002", "002peru", "01 Colombia Peru",
-  # Mayusculas minúsculas
-  "COLOMBIA","PERU","CoLOmBiA","PeRu",
-  # Con simbolos
-  "$Cólómbíä999","%pËrù444",
-  # Numeros y espacios
-  "1","2","3"," 4"," 5"," 6", "345","789","567", 
-  # Entre simbolos
-  "[99]1234","[88]567","[9]666[8]","[an]456[id]","(9)5","{7}2")
-```
+-   `str_view()` : Es uno de los comándos más utiles de esta libreria,
+    ya que nos permite previzualizar el resultado de nuestra aplicar
+    nuestra expresión regular a un o varios textos.
+
+    ``` r
+    str_view(ejemplo, "^\\d{0,}")
+    ```
+
+-   sad
 
 # Fundamentos de Web-scraping en R
 
@@ -332,21 +365,21 @@ nivel_edu
     ## # A tibble: 15 x 8
     ##    region         pais      materia     p_2014 p_2016 p_2018 p_2020 p_2022
     ##    <chr>          <chr>     <chr>        <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
-    ##  1 America latina Colombia  matematicas   67.7   53.6   53.1   63.6   29.0
-    ##  2 America latina Colombia  lenguaje      44.3   62.4   66.3   68.9   65.5
-    ##  3 America latina Colombia  ingles        50.7   56.7   41.8   58.0   52.8
-    ##  4 America latina Colombia  fisica        35.0   64.9   74.1   69.0   43.1
-    ##  5 America latina Colombia  quimica       39.0   72.2   49.9   53.9   98.1
-    ##  6 America latina Peru      matematicas   77.6   64.9   53.7   51.9   50.5
-    ##  7 America latina Peru      lenguaje      55.4   62.4   31.5   54.9   64.4
-    ##  8 America latina Peru      ingles        43.0   48.2   76.7   61.3   51.3
-    ##  9 America latina Peru      fisica        83.1   65.8   56.9   59.0   37.8
-    ## 10 America latina Peru      quimica       67.3   55.7   59.0   57.6   52.0
-    ## 11 America latina Venezuela matematicas   43.1   65.4   63.1   71.7   61.8
-    ## 12 America latina Venezuela lenguaje      48.5   58.1   78.2   46.6   69.5
-    ## 13 America latina Venezuela ingles        52.4   42.1   63.5   57.7   73.8
-    ## 14 America latina Venezuela fisica        55.8   48.1   60.7   61.9   92.3
-    ## 15 America latina Venezuela quimica       43.0   51.7   70.1   58.5   60.1
+    ##  1 America latina Colombia  matematicas  43.6    59.4   48.3   46.5   43.7
+    ##  2 America latina Colombia  lenguaje     64.2    64.7   48.6   59.0   48.4
+    ##  3 America latina Colombia  ingles       56.1    52.9   71.8   79.3   72.9
+    ##  4 America latina Colombia  fisica       37.9    58.2   70.1   47.9   53.8
+    ##  5 America latina Colombia  quimica      25.1    64.1   62.2   62.2   45.8
+    ##  6 America latina Peru      matematicas  60.5    51.4   58.8   60.5   57.4
+    ##  7 America latina Peru      lenguaje     62.8    68.5   50.4   51.0   62.8
+    ##  8 America latina Peru      ingles       62.3    74.0   39.4   70.0   47.0
+    ##  9 America latina Peru      fisica        7.66   48.0   52.9   69.9   45.5
+    ## 10 America latina Peru      quimica      73.3    38.1   56.7   54.0   57.0
+    ## 11 America latina Venezuela matematicas  24.1    70.3   81.5   63.2   66.5
+    ## 12 America latina Venezuela lenguaje     30.5    42.8   69.0   63.7  110. 
+    ## 13 America latina Venezuela ingles       27.3    49.1   69.2   67.5  118. 
+    ## 14 America latina Venezuela fisica       69.8    50.8   57.0   53.9   46.0
+    ## 15 America latina Venezuela quimica      56.6    76.6   41.5   70.4   71.1
 
 ``` r
 # pivot_longer() cumple la misma función de "melt()"
@@ -358,16 +391,16 @@ nivel_edu
     ## # A tibble: 75 x 5
     ##    region         pais     materia     periodo notas
     ##    <chr>          <chr>    <chr>       <chr>   <dbl>
-    ##  1 America latina Colombia matematicas p_2014   67.7
-    ##  2 America latina Colombia matematicas p_2016   53.6
-    ##  3 America latina Colombia matematicas p_2018   53.1
-    ##  4 America latina Colombia matematicas p_2020   63.6
-    ##  5 America latina Colombia matematicas p_2022   29.0
-    ##  6 America latina Colombia lenguaje    p_2014   44.3
-    ##  7 America latina Colombia lenguaje    p_2016   62.4
-    ##  8 America latina Colombia lenguaje    p_2018   66.3
-    ##  9 America latina Colombia lenguaje    p_2020   68.9
-    ## 10 America latina Colombia lenguaje    p_2022   65.5
+    ##  1 America latina Colombia matematicas p_2014   43.6
+    ##  2 America latina Colombia matematicas p_2016   59.4
+    ##  3 America latina Colombia matematicas p_2018   48.3
+    ##  4 America latina Colombia matematicas p_2020   46.5
+    ##  5 America latina Colombia matematicas p_2022   43.7
+    ##  6 America latina Colombia lenguaje    p_2014   64.2
+    ##  7 America latina Colombia lenguaje    p_2016   64.7
+    ##  8 America latina Colombia lenguaje    p_2018   48.6
+    ##  9 America latina Colombia lenguaje    p_2020   59.0
+    ## 10 America latina Colombia lenguaje    p_2022   48.4
     ## # ... with 65 more rows
 
 ``` r
@@ -379,18 +412,18 @@ nivel_edu %>%
     ## # A tibble: 15 x 8
     ##    region         pais      periodo matematicas lenguaje ingles fisica quimica
     ##    <chr>          <chr>     <chr>         <dbl>    <dbl>  <dbl>  <dbl>   <dbl>
-    ##  1 America latina Colombia  p_2014         67.7     44.3   50.7   35.0    39.0
-    ##  2 America latina Colombia  p_2016         53.6     62.4   56.7   64.9    72.2
-    ##  3 America latina Colombia  p_2018         53.1     66.3   41.8   74.1    49.9
-    ##  4 America latina Colombia  p_2020         63.6     68.9   58.0   69.0    53.9
-    ##  5 America latina Colombia  p_2022         29.0     65.5   52.8   43.1    98.1
-    ##  6 America latina Peru      p_2014         77.6     55.4   43.0   83.1    67.3
-    ##  7 America latina Peru      p_2016         64.9     62.4   48.2   65.8    55.7
-    ##  8 America latina Peru      p_2018         53.7     31.5   76.7   56.9    59.0
-    ##  9 America latina Peru      p_2020         51.9     54.9   61.3   59.0    57.6
-    ## 10 America latina Peru      p_2022         50.5     64.4   51.3   37.8    52.0
-    ## 11 America latina Venezuela p_2014         43.1     48.5   52.4   55.8    43.0
-    ## 12 America latina Venezuela p_2016         65.4     58.1   42.1   48.1    51.7
-    ## 13 America latina Venezuela p_2018         63.1     78.2   63.5   60.7    70.1
-    ## 14 America latina Venezuela p_2020         71.7     46.6   57.7   61.9    58.5
-    ## 15 America latina Venezuela p_2022         61.8     69.5   73.8   92.3    60.1
+    ##  1 America latina Colombia  p_2014         43.6     64.2   56.1  37.9     25.1
+    ##  2 America latina Colombia  p_2016         59.4     64.7   52.9  58.2     64.1
+    ##  3 America latina Colombia  p_2018         48.3     48.6   71.8  70.1     62.2
+    ##  4 America latina Colombia  p_2020         46.5     59.0   79.3  47.9     62.2
+    ##  5 America latina Colombia  p_2022         43.7     48.4   72.9  53.8     45.8
+    ##  6 America latina Peru      p_2014         60.5     62.8   62.3   7.66    73.3
+    ##  7 America latina Peru      p_2016         51.4     68.5   74.0  48.0     38.1
+    ##  8 America latina Peru      p_2018         58.8     50.4   39.4  52.9     56.7
+    ##  9 America latina Peru      p_2020         60.5     51.0   70.0  69.9     54.0
+    ## 10 America latina Peru      p_2022         57.4     62.8   47.0  45.5     57.0
+    ## 11 America latina Venezuela p_2014         24.1     30.5   27.3  69.8     56.6
+    ## 12 America latina Venezuela p_2016         70.3     42.8   49.1  50.8     76.6
+    ## 13 America latina Venezuela p_2018         81.5     69.0   69.2  57.0     41.5
+    ## 14 America latina Venezuela p_2020         63.2     63.7   67.5  53.9     70.4
+    ## 15 America latina Venezuela p_2022         66.5    110.   118.   46.0     71.1

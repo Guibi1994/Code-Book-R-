@@ -107,14 +107,39 @@ ejemplo
 
     -   **c:** En este ejemplo el caracter "`456`" si es seleccioando dado la omisión del indicativo `^` . Esto quiere decir que se seleccionen todos los números consecutivos independientemente de en que posición esten. Sin embargo los números "`789`" del último *strign* no son seleccioandos. La razón de esto es por que una vez satisfecha la consulta, todo lo demás no es seleccionado.
 
-    -   **d:** Para identificar entonces no solo el primet "march" sino todos los posibles match, podemos usar la función `str_vie_all()` y de este modo si quedarán seleccioandos todos los números, sin importar orden, repetición o posición.
+    -   **d:** Para identificar entonces no solo el primet "march" sino todos los posibles match, podemos usar la función `str_view_all()` y de este modo si quedarán seleccioandos todos los números, sin importar orden, repetición o posición.
 
 <p align="center">
 <img src="00_Code_Book_2.0_files/figure-gfm/prueba4.png" alt="Preuba" width="540"/>
 </p>
 
--   df
--   sad
+-   `str_extract()` y `str_extract_all()`: Son los comandos empleados para extraer finalmente la información
+
+    ```{r, echo=TRUE}
+    str_extract(ejemplo, "\\d+")
+    ```
+
+-   `str_detect()`: Crea un booleano (falso o vedero) con el resultado de la consulta
+
+    ```{r, echo=TRUE}
+    str_detect(ejemplo, "\\d+")
+    ```
+
+-   `str_match()`: A diferencia de `str_extract()`, `str_match()` tiene en cuenta los **grupos de extracción**. Un grupo de extracción se define encerrando en paréntesis `(  )` los elementos que realmente nos interesan de la expresión regular.
+
+    ```{r, echo=TRUE}
+    # Tomemos el siguiente vector
+    ejemplo <- c("Nombre: Sofia, edad: 23","Nombre: Elena, edad: 21")
+    ejemplo
+    ```
+
+    Un manera de extraer la información sería la siguiente:  
+
+    -   **Para extraer el nombre**: seleccionar todo lo que sea difernte de una "coma" (`[^,]*`) que este despues de dos puntos (`\\:`) y un espacio (`\\s`) hasta llegar a una coma (`,`). Todo junto es: `"\\:\\s[^,]*,"`. Aquí podemos definir que nos interesa el nombre y no lo demas, definiendo con paréntisis el grupo de extracción: `"\\:\\s([^,]*),"`
+
+        ```{r, echo=TRUE, eval=FALSE}
+        str_view(ejemplo, "\\:\\s([^,]*),[^\\d]*(\\d+)")
+        ```
 
 # Fundamentos de Web-scraping en R
 
@@ -221,8 +246,7 @@ En este ejemplo utilizaremos la página web de [Wilkipedia del PIB (Prodcucto In
       # - - - - - - - - - - - -
       # Pasos EXTRA: Limpiar un poco la base (cada caso es particular)
       janitor::row_to_names(row_number = 1) %>% 
-      rename(Pais = 1,Region = 2, PIB_FMI=3,p_FMI=4,PIB_ONU=5,p_ONU=6,PIB_BM = 7,
-             p_BM = 8) %>% 
+      rename(Pais = 1,Region = 2, PIB_FMI=3,p_FMI=4,PIB_ONU=5,p_ONU=6,PIB_BM = 7,         p_BM = 8) %>% 
       mutate(across(PIB_FMI:p_BM,~gsub(",","",.))) %>% as_tibble()
 
     PIB_paises
